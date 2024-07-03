@@ -56,7 +56,7 @@ const Chat = () => {
                   </span>
                 </div>
                 <Avatar className="h-10 w-10">
-                  <AvatarImage src="/images/blog/authors/richard-kovacs.webp" />
+                  <AvatarImage src="./public/richard-kovacs.webp" />
                   <AvatarFallback>RK</AvatarFallback>
                 </Avatar>
               </div>
@@ -77,13 +77,13 @@ const Chat = () => {
                   key={message.id}
                   className={cn(
                     "flex items-start gap-3",
-                    message.role === "user" ? "" : "justify-end"
+                    message.role === "user" ? "justify-end" : ""
                   )}
                 >
-                  {message.role === "user" ? (
+                  {message.role !== "user" ? (
                     <Avatar className="h-8 w-8">
-                      <AvatarImage src="/placeholder-user.jpg" />
-                      <AvatarFallback>YO</AvatarFallback>
+                      <AvatarImage src="./public/richard-kovacs.webp" />
+                      <AvatarFallback>RK</AvatarFallback>
                     </Avatar>
                   ) : null}
                   <div
@@ -98,23 +98,23 @@ const Chat = () => {
                       <p key={i}>{line}</p>
                     ))}
                   </div>
-                  {message.role !== "user" ? (
+                  {message.role === "user" ? (
                     <Avatar className="h-8 w-8">
-                      <AvatarImage src="/images/blog/authors/richard-kovacs.webp" />
-                      <AvatarFallback>RK</AvatarFallback>
+                      <AvatarImage src="./public/profile.svg" />
+                      <AvatarFallback>US</AvatarFallback>
                     </Avatar>
                   ) : null}
                 </div>
               ))}
               {isLoading && messages[messages.length - 1].role === "user" ? (
-                <div className="flex items-start gap-3 justify-end">
-                  <span className="rounded-lg bg-primary text-primary-foreground p-3 text-sm animate-pulse">
-                    ...
-                  </span>
+                <div className="flex items-start gap-3">
                   <Avatar className="h-8 w-8">
                     <AvatarImage src="/images/blog/authors/richard-kovacs.webp" />
                     <AvatarFallback>RK</AvatarFallback>
                   </Avatar>
+                  <span className="rounded-lg bg-primary text-primary-foreground p-3 text-sm animate-pulse">
+                    ...
+                  </span>
                 </div>
               ) : null}
             </CardContent>
