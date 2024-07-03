@@ -20,10 +20,16 @@ import { Textarea } from "@/components/ui/textarea";
 
 const Chat = () => {
   const [open, setOpen] = React.useState(false);
-  const { messages, setMessages, input, handleInputChange, handleSubmit } =
-    useChat({
-      api: "api/chat",
-    });
+  const {
+    messages,
+    setMessages,
+    isLoading,
+    input,
+    handleInputChange,
+    handleSubmit,
+  } = useChat({
+    api: "http://localhost:3001/api/chat",
+  });
 
   const onKeyDown = (e) => {
     if (e.key === "Enter" && !e.shiftKey) {
@@ -100,6 +106,17 @@ const Chat = () => {
                   ) : null}
                 </div>
               ))}
+              {isLoading && messages[messages.length - 1].role === "user" ? (
+                <div className="flex items-start gap-3 justify-end">
+                  <span className="rounded-lg bg-primary text-primary-foreground p-3 text-sm animate-pulse">
+                    ...
+                  </span>
+                  <Avatar className="h-8 w-8">
+                    <AvatarImage src="/images/blog/authors/richard-kovacs.webp" />
+                    <AvatarFallback>RK</AvatarFallback>
+                  </Avatar>
+                </div>
+              ) : null}
             </CardContent>
           </ScrollArea>
           <CardFooter className="flex flex-col border-t p-4 gap-2">
