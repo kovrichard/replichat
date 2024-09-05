@@ -19,9 +19,9 @@ jobs:
       - run: bun install
       - run: bun run build
 
-      - uses: Deploy to S3
 
-      - uses: reggionick/s3-deploy@v4
+      - name: Deploy to S3
+        uses: reggionick/s3-deploy@v4
         with:
           folder: dist
           bucket: ${{ secrets.S3_BUCKET }}
