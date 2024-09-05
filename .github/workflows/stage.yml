@@ -27,4 +27,4 @@ jobs:
           S3_BUCKET: ${{ secrets.S3_BUCKET }}
         run: |
           bun install -g aws-cli
-          aws s3 cp ./dist s3://$S3_BUCKET --delete
+          aws s3 cp ./dist s3://$S3_BUCKET
