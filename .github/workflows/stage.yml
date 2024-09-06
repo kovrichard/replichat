@@ -18,6 +18,8 @@ jobs:
 
       - run: bun install
       - run: bun run build
+        env:
+          BACKEND_URL: ${{ secrets.STAGE_BACKEND_URL }}
 
       - name: Deploy to S3
         env:

@@ -28,7 +28,7 @@ const Chat = () => {
     handleInputChange,
     handleSubmit,
   } = useChat({
-    api: "http://localhost:3001/api/chat",
+    api: process.env.BACKEND_URL,
   });
 
   const onKeyDown = (e) => {
