@@ -2,10 +2,15 @@ const path = require('path');
 const webpack = require('webpack');
 const dotenv = require('dotenv');
 
-const env = dotenv.config().parsed;
+const env = dotenv.config().parsed || {};
 
-const envKeys = Object.keys(env).reduce((prev, next) => {
-  prev[`process.env.${next}`] = JSON.stringify(env[next]);
+const mergedEnv = {
+  ...process.env,
+  ...env
+};
+
+const envKeys = Object.keys(mergedEnv).reduce((prev, next) => {
+  prev[`process.env.${next}`] = JSON.stringify(mergedEnv[next]);
   return prev;
 }, {});
 
