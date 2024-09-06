@@ -6,7 +6,7 @@ import {
   CardContent,
   CardFooter,
 } from "@/components/ui/card";
-import { Avatar, AvatarImage, AvatarFallback } from "@/components/ui/avatar";
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 import {
@@ -16,9 +16,16 @@ import {
   IconSend,
 } from "@tabler/icons-react";
 import { ScrollArea } from "@/components/ui/scroll-area";
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipProvider,
+  TooltipTrigger,
+} from "@/components/ui/tooltip";
 import { Textarea } from "@/components/ui/textarea";
 
 const Chat = () => {
+  const chatContainerRef = React.useRef(null);
   const [open, setOpen] = React.useState(false);
   const {
     messages,
@@ -36,6 +43,16 @@ const Chat = () => {
       handleSubmit(e);
     }
   };
+
+  React.useEffect(() => {
+    if (chatContainerRef.current) {
+      chatContainerRef.current.scrollIntoView({
+        behavior: "smooth",
+        block: "end",
+        inline: "nearest",
+      });
+    }
+  }, [messages]);
 
   return (
     <div className="fixed flex flex-col items-end right-10 bottom-10 gap-4">
@@ -61,17 +78,20 @@ const Chat = () => {
                 </Avatar>
               </div>
               <div className="font-medium">Richard's Alter Ego</div>
-              <Button
-                className="absolute right-3 bottom-3"
-                size="icon"
-                onClick={() => setMessages([])}
-              >
-                <IconMessage2Plus className="h-5 w-5" />
-              </Button>
+              <TooltipProvider>
+                <Tooltip delayDuration={100}>
+                  <TooltipTrigger className="absolute right-3 bottom-3">
+                    <Button size="icon" onClick={() => setMessages([])}>
+                      <IconMessage2Plus className="h-5 w-5" />
+                    </Button>
+                  </TooltipTrigger>
+                  <TooltipContent>New conversation</TooltipContent>
+                </Tooltip>
+              </TooltipProvider>
             </div>
           </CardHeader>
           <ScrollArea className="h-[400px]">
-            <CardContent className="p-4 grid gap-4">
+            <CardContent className="p-4 grid gap-4" ref={chatContainerRef}>
               {messages.map((message) => (
                 <div
                   key={message.id}
@@ -145,7 +165,7 @@ const Chat = () => {
         </Card>
       ) : null}
       <Button
-        className="w-20 h-20 rounded-full"
+        className="w-20 h-20 rounded-full bg-background text-text"
         variant="ghost"
         onClick={() => setOpen(!open)}
       >
