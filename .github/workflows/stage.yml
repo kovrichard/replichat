@@ -3,7 +3,7 @@ name: Deploy chat script to S3
 on:
   push:
     branches:
-      - main
+      - stage
 
 jobs:
   deploy:
