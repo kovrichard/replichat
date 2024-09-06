@@ -18,7 +18,7 @@ module.exports = {
   entry: './src/index.js',
   output: {
     path: path.resolve(__dirname, 'dist'),
-    filename: 'bundle.js',
+    filename: 'chat.js',
     library: 'replichat',
     libraryTarget: 'umd'
   },
