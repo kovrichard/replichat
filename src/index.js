@@ -1,10 +1,8 @@
 import '@/styles/globals.css';
 import React from 'react';
-import ReactDOM from 'react-dom';
 import Chat from './chat';
+import { createRoot } from 'react-dom/client';
 
-(function() {
-  const container = document.createElement('div');
-  document.body.appendChild(container);
-  ReactDOM.render(<Chat />, container);
-})();
+const domNode = document.getElementById('root');
+const root = createRoot(domNode);
+root.render(<Chat />);

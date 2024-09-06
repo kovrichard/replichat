@@ -1,6 +1,8 @@
 const path = require('path');
 const webpack = require('webpack');
 const dotenv = require('dotenv');
+const HtmlWebpackPlugin = require('html-webpack-plugin');
+const CopyWebpackPlugin = require('copy-webpack-plugin');
 
 const env = dotenv.config().parsed || {};
 
@@ -43,5 +45,18 @@ module.exports = {
   },
   plugins: [
     new webpack.DefinePlugin(envKeys),
-  ]
+    new HtmlWebpackPlugin({
+      template: 'src/index.html'
+    }),
+    new CopyWebpackPlugin({
+      patterns: [
+        { from: 'public', to: 'public' },
+      ],
+    }),
+  ],
+  devServer: {
+    static: path.join(__dirname, 'dist'),
+    compress: true,
+    port: 9000
+  }
 };
