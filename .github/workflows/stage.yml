@@ -28,3 +28,4 @@ jobs:
         run: |
           bun install -g aws-cli
           aws s3 cp ./dist/bundle.js s3://$S3_BUCKET/bundle.js
+          aws cloudfront create-invalidation --distribution-id ${{ secrets.CLOUDFRONT_DISTRIBUTION_ID }} --paths "/bundle.js"
