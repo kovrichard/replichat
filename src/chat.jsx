@@ -25,6 +25,12 @@ import {
 import { Textarea } from "@/components/ui/textarea";
 
 const Chat = (props) => {
+  const config = {
+    title: "AI Assistant",
+    userInitials: "US",
+    assistantInitials: "AI",
+    ...props.config,
+  };
   console.log(props.config);
 
   const chatContainerRef = React.useRef(null);
@@ -76,10 +82,10 @@ const Chat = (props) => {
                 </div>
                 <Avatar className="h-10 w-10">
                   <AvatarImage src="./public/richard-kovacs.webp" />
-                  <AvatarFallback>RK</AvatarFallback>
+                  <AvatarFallback>{config.assistantInitials}</AvatarFallback>
                 </Avatar>
               </div>
-              <div className="font-medium">Richard's Alter Ego</div>
+              <div className="font-medium">{config.title}</div>
               <TooltipProvider>
                 <Tooltip delayDuration={100}>
                   <TooltipTrigger className="absolute right-3 bottom-3" asChild>
@@ -105,7 +111,7 @@ const Chat = (props) => {
                   {message.role !== "user" ? (
                     <Avatar className="h-8 w-8">
                       <AvatarImage src="./public/richard-kovacs.webp" />
-                      <AvatarFallback>RK</AvatarFallback>
+                      <AvatarFallback>{config.assistantInitials}</AvatarFallback>
                     </Avatar>
                   ) : null}
                   <div
@@ -123,7 +129,7 @@ const Chat = (props) => {
                   {message.role === "user" ? (
                     <Avatar className="h-8 w-8">
                       <AvatarImage src="./public/profile.svg" />
-                      <AvatarFallback>US</AvatarFallback>
+                      <AvatarFallback>{config.userInitials}</AvatarFallback>
                     </Avatar>
                   ) : null}
                 </div>
@@ -132,7 +138,7 @@ const Chat = (props) => {
                 <div className="flex items-start gap-3">
                   <Avatar className="h-8 w-8">
                     <AvatarImage src="/images/blog/authors/richard-kovacs.webp" />
-                    <AvatarFallback>RK</AvatarFallback>
+                    <AvatarFallback>{config.assistantInitials}</AvatarFallback>
                   </Avatar>
                   <span className="rounded-lg bg-primary text-primary-foreground p-3 text-sm animate-pulse">
                     ...

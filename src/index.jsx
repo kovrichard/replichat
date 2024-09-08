@@ -5,7 +5,7 @@ import { createRoot } from 'react-dom/client';
 import { initializeChatbot } from './initialize';
 
 const config = {
-    hello: 'world',
+    title: 'Test Assistant'
 };
 
 if (process.env.NODE_ENV === 'development') {
