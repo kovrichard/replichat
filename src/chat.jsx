@@ -29,6 +29,8 @@ const Chat = (props) => {
     title: "AI Assistant",
     userInitials: "US",
     assistantInitials: "AI",
+    userIcon: "https://chat.richardkovacs.dev/profile.svg",
+    botIcon: "https://chat.richardkovacs.dev/richard-kovacs.webp",
     ...props.config,
   };
   console.log(props.config);
@@ -81,7 +83,7 @@ const Chat = (props) => {
                   </span>
                 </div>
                 <Avatar className="h-10 w-10">
-                  <AvatarImage src="./public/richard-kovacs.webp" />
+                  <AvatarImage src={config.botIcon} />
                   <AvatarFallback>{config.assistantInitials}</AvatarFallback>
                 </Avatar>
               </div>
@@ -110,7 +112,7 @@ const Chat = (props) => {
                 >
                   {message.role !== "user" ? (
                     <Avatar className="h-8 w-8">
-                      <AvatarImage src="./public/richard-kovacs.webp" />
+                      <AvatarImage src={config.botIcon} />
                       <AvatarFallback>
                         {config.assistantInitials}
                       </AvatarFallback>
@@ -130,7 +132,7 @@ const Chat = (props) => {
                   </div>
                   {message.role === "user" ? (
                     <Avatar className="h-8 w-8">
-                      <AvatarImage src="./public/profile.svg" />
+                      <AvatarImage src={config.userIcon} />
                       <AvatarFallback>{config.userInitials}</AvatarFallback>
                     </Avatar>
                   ) : null}
@@ -139,7 +141,7 @@ const Chat = (props) => {
               {isLoading && messages[messages.length - 1].role === "user" ? (
                 <div className="flex items-start gap-3">
                   <Avatar className="h-8 w-8">
-                    <AvatarImage src="/images/blog/authors/richard-kovacs.webp" />
+                    <AvatarImage src={config.botIcon} />
                     <AvatarFallback>{config.assistantInitials}</AvatarFallback>
                   </Avatar>
                   <span className="rounded-lg bg-primary text-primary-foreground p-3 text-sm animate-pulse">
