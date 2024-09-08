@@ -14,6 +14,7 @@ import {
   IconX,
   IconMessageDots,
   IconSend,
+  IconPlayerStopFilled,
 } from "@tabler/icons-react";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import {
@@ -33,7 +34,6 @@ const Chat = (props) => {
     botIcon: "https://chat.richardkovacs.dev/richard-kovacs.webp",
     ...props.config,
   };
-  console.log(props.config);
 
   const chatContainerRef = React.useRef(null);
   const [open, setOpen] = React.useState(false);
@@ -44,6 +44,7 @@ const Chat = (props) => {
     input,
     handleInputChange,
     handleSubmit,
+    stop,
   } = useChat({
     api: process.env.BACKEND_URL,
   });
@@ -163,14 +164,26 @@ const Chat = (props) => {
                 onChange={handleInputChange}
                 className="h-16 min-h-0 w-full resize-none rounded-xl border border-neutral-400 px-4 pr-16 shadow-sm scroll"
               />
-              <Button
-                type="submit"
-                size="icon"
-                className="absolute top-1/2 right-3 -translate-y-1/2"
-              >
-                <IconSend className="h-4 w-4" />
-                <span className="sr-only">Send</span>
-              </Button>
+              {isLoading ? (
+                <Button
+                  type="button"
+                  size="icon"
+                  className="absolute top-1/2 right-3 -translate-y-1/2"
+                  onClick={stop}
+                >
+                  <IconPlayerStopFilled className="h-4 w-4" />
+                  <span className="sr-only">Stop</span>
+                </Button>
+              ) : (
+                <Button
+                  type="submit"
+                  size="icon"
+                  className="absolute top-1/2 right-3 -translate-y-1/2"
+                >
+                  <IconSend className="h-4 w-4" />
+                  <span className="sr-only">Send</span>
+                </Button>
+              )}
             </form>
             <div className="flex items-center gap-2">
               <p className="text-sm">Powered by</p>
@@ -180,7 +193,12 @@ const Chat = (props) => {
                 rel="noreferrer"
                 className="flex items-center gap-1"
               >
-                <img src="https://chat.richardkovacs.dev/icon.png" alt="Replichat" width={20} height={20} />
+                <img
+                  src="https://chat.richardkovacs.dev/icon.png"
+                  alt="Replichat"
+                  width={20}
+                  height={20}
+                />
                 <p>Replichat</p>
               </a>
             </div>
