@@ -24,7 +24,9 @@ import {
 } from "@/components/ui/tooltip";
 import { Textarea } from "@/components/ui/textarea";
 
-const Chat = () => {
+const Chat = (props) => {
+  console.log(props.config);
+
   const chatContainerRef = React.useRef(null);
   const [open, setOpen] = React.useState(false);
   const {
@@ -80,7 +82,7 @@ const Chat = () => {
               <div className="font-medium">Richard's Alter Ego</div>
               <TooltipProvider>
                 <Tooltip delayDuration={100}>
-                  <TooltipTrigger className="absolute right-3 bottom-3">
+                  <TooltipTrigger className="absolute right-3 bottom-3" asChild>
                     <Button size="icon" onClick={() => setMessages([])}>
                       <IconMessage2Plus className="h-5 w-5" />
                     </Button>

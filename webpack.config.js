@@ -17,7 +17,7 @@ const envKeys = Object.keys(mergedEnv).reduce((prev, next) => {
 }, {});
 
 module.exports = {
-  entry: './src/index.js',
+  entry: './src/index.jsx',
   output: {
     path: path.resolve(__dirname, 'dist'),
     filename: 'chat.js',
