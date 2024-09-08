@@ -24,6 +24,7 @@ import {
   TooltipTrigger,
 } from "@/components/ui/tooltip";
 import { Textarea } from "@/components/ui/textarea";
+import { createId } from "@paralleldrive/cuid2";
 
 const Chat = (props) => {
   const config = {
@@ -32,6 +33,7 @@ const Chat = (props) => {
     assistantInitials: "AI",
     userIcon: "https://chat.richardkovacs.dev/profile.svg",
     botIcon: "https://chat.richardkovacs.dev/richard-kovacs.webp",
+    apiKey: "",
     ...props.config,
   };
 
@@ -56,7 +58,12 @@ const Chat = (props) => {
       setMessages(messages.slice(0, -1));
     }
 
-    handleSubmit(e);
+    handleSubmit(e, {
+      body: {
+        apiKey: config.apiKey,
+        conversationId: localStorage.getItem("chatId"),
+      },
+    });
   }
 
   const onKeyDown = (e) => {
@@ -66,6 +73,11 @@ const Chat = (props) => {
   };
 
   React.useEffect(() => {
+    if (messages.length === 0) {
+      const id = createId();
+      localStorage.setItem("chatId", id);
+    }
+
     if (chatContainerRef.current) {
       chatContainerRef.current.scrollIntoView({
         behavior: "smooth",

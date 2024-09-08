@@ -12,6 +12,7 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
+    "@paralleldrive/cuid2": "2.2.2",
     "@radix-ui/react-avatar": "1.1.0",
     "@radix-ui/react-scroll-area": "1.1.0",
     "@radix-ui/react-slot": "1.1.0",
