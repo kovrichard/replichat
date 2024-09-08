@@ -45,13 +45,23 @@ const Chat = (props) => {
     handleInputChange,
     handleSubmit,
     stop,
+    error,
   } = useChat({
     api: process.env.BACKEND_URL,
+    keepLastMessageOnError: true,
   });
+
+  function customSubmit(e) {
+    if (error !== undefined) {
+      setMessages(messages.slice(0, -1));
+    }
+
+    handleSubmit(e);
+  }
 
   const onKeyDown = (e) => {
     if (e.key === "Enter" && !e.shiftKey) {
-      handleSubmit(e);
+      customSubmit(e);
     }
   };
 
@@ -103,42 +113,48 @@ const Chat = (props) => {
           </CardHeader>
           <ScrollArea className="h-[400px]">
             <CardContent className="p-4 grid gap-4" ref={chatContainerRef}>
-              {messages.map((message) => (
-                <div
-                  key={message.id}
-                  className={cn(
-                    "flex items-start gap-3",
-                    message.role === "user" ? "justify-end" : ""
-                  )}
-                >
-                  {message.role !== "user" ? (
-                    <Avatar className="h-8 w-8">
-                      <AvatarImage src={config.botIcon} />
-                      <AvatarFallback>
-                        {config.assistantInitials}
-                      </AvatarFallback>
-                    </Avatar>
-                  ) : null}
+              {error ? (
+                <div>
+                  <p>{error.message}</p>
+                </div>
+              ) : (
+                messages.map((message) => (
                   <div
+                    key={message.id}
                     className={cn(
-                      "rounded-lg bg-muted p-3 text-sm",
-                      message.role === "user"
-                        ? ""
-                        : "bg-primary text-primary-foreground"
+                      "flex items-start gap-3",
+                      message.role === "user" ? "justify-end" : ""
                     )}
                   >
-                    {message.content.split("\n").map((line, i) => (
-                      <p key={i}>{line}</p>
-                    ))}
+                    {message.role !== "user" ? (
+                      <Avatar className="h-8 w-8">
+                        <AvatarImage src={config.botIcon} />
+                        <AvatarFallback>
+                          {config.assistantInitials}
+                        </AvatarFallback>
+                      </Avatar>
+                    ) : null}
+                    <div
+                      className={cn(
+                        "rounded-lg bg-muted p-3 text-sm",
+                        message.role === "user"
+                          ? ""
+                          : "bg-primary text-primary-foreground"
+                      )}
+                    >
+                      {message.content.split("\n").map((line, i) => (
+                        <p key={i}>{line}</p>
+                      ))}
+                    </div>
+                    {message.role === "user" ? (
+                      <Avatar className="h-8 w-8">
+                        <AvatarImage src={config.userIcon} />
+                        <AvatarFallback>{config.userInitials}</AvatarFallback>
+                      </Avatar>
+                    ) : null}
                   </div>
-                  {message.role === "user" ? (
-                    <Avatar className="h-8 w-8">
-                      <AvatarImage src={config.userIcon} />
-                      <AvatarFallback>{config.userInitials}</AvatarFallback>
-                    </Avatar>
-                  ) : null}
-                </div>
-              ))}
+                ))
+              )}
               {isLoading && messages[messages.length - 1].role === "user" ? (
                 <div className="flex items-start gap-3">
                   <Avatar className="h-8 w-8">
@@ -155,7 +171,7 @@ const Chat = (props) => {
           <CardFooter className="flex flex-col border-t p-4 gap-2">
             <form
               className="relative w-full"
-              onSubmit={handleSubmit}
+              onSubmit={customSubmit}
               onKeyDown={onKeyDown}
             >
               <Textarea
