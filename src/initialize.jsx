@@ -20,6 +20,10 @@ export function initializeChatbot() {
     }
   }
 
-  const root = createRoot(document.body);
+  const chatbotContainer = document.createElement('div');
+  chatbotContainer.id = 'chatbot-container';
+  document.body.appendChild(chatbotContainer);
+
+  const root = createRoot(chatbotContainer);
   root.render(<Chat config={config} />);
 }
