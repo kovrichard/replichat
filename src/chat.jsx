@@ -111,7 +111,9 @@ const Chat = (props) => {
                   {message.role !== "user" ? (
                     <Avatar className="h-8 w-8">
                       <AvatarImage src="./public/richard-kovacs.webp" />
-                      <AvatarFallback>{config.assistantInitials}</AvatarFallback>
+                      <AvatarFallback>
+                        {config.assistantInitials}
+                      </AvatarFallback>
                     </Avatar>
                   ) : null}
                   <div
@@ -168,7 +170,18 @@ const Chat = (props) => {
                 <span className="sr-only">Send</span>
               </Button>
             </form>
-            <p className="text-sm">Powered by Chat.tsx</p>
+            <div className="flex items-center gap-2">
+              <p className="text-sm">Powered by</p>
+              <a
+                href="https://replichat.com"
+                target="_blank"
+                rel="noreferrer"
+                className="flex items-center gap-1"
+              >
+                <img src="https://chat.richardkovacs.dev/icon.png" alt="Replichat" width={20} height={20} />
+                <p>Replichat</p>
+              </a>
+            </div>
           </CardFooter>
         </Card>
       ) : null}
