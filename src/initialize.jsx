@@ -21,7 +21,7 @@ export function initializeChatbot() {
   }
 
   const chatbotContainer = document.createElement('div');
-  chatbotContainer.id = 'chatbot-container';
+  chatbotContainer.id = 'replichat-root';
   document.body.appendChild(chatbotContainer);
 
   const root = createRoot(chatbotContainer);
