@@ -88,34 +88,34 @@ const Chat = (props) => {
   }, [messages]);
 
   return (
-    <div className="fixed flex flex-col items-end right-10 bottom-10 gap-4">
+    <div className="replichat-fixed replichat-flex replichat-flex-col replichat-items-end replichat-right-10 replichat-bottom-10 replichat-gap-4">
       {open ? (
         <Card
           className={cn(
-            "sm:w-96 rounded-2xl shadow-lg bg-background",
+            "sm:replichat-w-96 replichat-rounded-2xl replichat-shadow-lg replichat-bg-background",
             open ? "slide-in" : "slide-out"
           )}
         >
-          <CardHeader className="relative justify-center flex-row gap-2 border-b p-4">
-            <div className="flex flex-col items-center gap-2">
-              <div className="relative">
-                <div className="absolute z-10 -right-[2px] -top-[2px]">
-                  <span className="relative flex h-3 w-3">
-                    <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-green-400 opacity-75"></span>
-                    <span className="relative inline-flex rounded-full h-3 w-3 bg-green-500"></span>
+          <CardHeader className="replichat-relative replichat-justify-center replichat-flex-row replichat-gap-2 replichat-border-b replichat-p-4">
+            <div className="replichat-flex replichat-flex-col replichat-items-center replichat-gap-2">
+              <div className="replichat-relative">
+                <div className="replichat-absolute replichat-z-10 -replichat-right-[2px] -replichat-top-[2px]">
+                  <span className="replichat-relative replichat-flex replichat-h-3 replichat-w-3">
+                    <span className="replichat-animate-ping replichat-absolute replichat-inline-flex replichat-h-full replichat-w-full replichat-rounded-full replichat-bg-green-400 replichat-opacity-75"></span>
+                    <span className="replichat-relative replichat-inline-flex replichat-rounded-full replichat-h-3 replichat-w-3 replichat-bg-green-500"></span>
                   </span>
                 </div>
-                <Avatar className="h-10 w-10">
+                <Avatar className="replichat-h-10 replichat-w-10">
                   <AvatarImage src={config.botIcon} />
                   <AvatarFallback>{config.assistantInitials}</AvatarFallback>
                 </Avatar>
               </div>
-              <div className="font-medium">{config.title}</div>
+              <div className="replichat-font-medium">{config.title}</div>
               <TooltipProvider>
                 <Tooltip delayDuration={100}>
-                  <TooltipTrigger className="absolute right-3 bottom-3" asChild>
+                  <TooltipTrigger className="replichat-absolute replichat-right-3 replichat-bottom-3" asChild>
                     <Button size="icon" onClick={() => setMessages([])}>
-                      <IconMessage2Plus className="h-5 w-5" />
+                      <IconMessage2Plus className="replichat-h-5 replichat-w-5" />
                     </Button>
                   </TooltipTrigger>
                   <TooltipContent>New conversation</TooltipContent>
@@ -123,8 +123,8 @@ const Chat = (props) => {
               </TooltipProvider>
             </div>
           </CardHeader>
-          <ScrollArea className="h-[400px]">
-            <CardContent className="p-4 grid gap-4" ref={chatContainerRef}>
+          <ScrollArea className="replichat-h-[400px]">
+            <CardContent className="replichat-p-4 replichat-grid replichat-gap-4" ref={chatContainerRef}>
               {error ? (
                 <div>
                   <p>{error.message}</p>
@@ -134,12 +134,12 @@ const Chat = (props) => {
                   <div
                     key={message.id}
                     className={cn(
-                      "flex items-start gap-3",
-                      message.role === "user" ? "justify-end" : ""
+                      "replichat-flex replichat-items-start replichat-gap-3",
+                      message.role === "user" ? "replichat-justify-end" : ""
                     )}
                   >
                     {message.role !== "user" ? (
-                      <Avatar className="h-8 w-8">
+                      <Avatar className="replichat-h-8 replichat-w-8">
                         <AvatarImage src={config.botIcon} />
                         <AvatarFallback>
                           {config.assistantInitials}
@@ -148,10 +148,10 @@ const Chat = (props) => {
                     ) : null}
                     <div
                       className={cn(
-                        "rounded-lg bg-muted p-3 text-sm",
+                        "replichat-rounded-lg replichat-bg-muted replichat-p-3 replichat-text-sm",
                         message.role === "user"
                           ? ""
-                          : "bg-primary text-primary-foreground"
+                          : "replichat-bg-primary replichat-text-primary-foreground"
                       )}
                     >
                       {message.content.split("\n").map((line, i) => (
@@ -159,7 +159,7 @@ const Chat = (props) => {
                       ))}
                     </div>
                     {message.role === "user" ? (
-                      <Avatar className="h-8 w-8">
+                      <Avatar className="replichat-h-8 replichat-w-8">
                         <AvatarImage src={config.userIcon} />
                         <AvatarFallback>{config.userInitials}</AvatarFallback>
                       </Avatar>
@@ -168,21 +168,21 @@ const Chat = (props) => {
                 ))
               )}
               {isLoading && messages[messages.length - 1].role === "user" ? (
-                <div className="flex items-start gap-3">
-                  <Avatar className="h-8 w-8">
+                <div className="replichat-flex replichat-items-start replichat-gap-3">
+                  <Avatar className="replichat-h-8 replichat-w-8">
                     <AvatarImage src={config.botIcon} />
                     <AvatarFallback>{config.assistantInitials}</AvatarFallback>
                   </Avatar>
-                  <span className="rounded-lg bg-primary text-primary-foreground p-3 text-sm animate-pulse">
+                  <span className="replichat-rounded-lg replichat-bg-primary replichat-text-primary-foreground replichat-p-3 replichat-text-sm replichat-animate-pulse">
                     ...
                   </span>
                 </div>
               ) : null}
             </CardContent>
           </ScrollArea>
-          <CardFooter className="flex flex-col border-t p-4 gap-2">
+          <CardFooter className="replichat-flex replichat-flex-col replichat-border-t replichat-p-4 replichat-gap-2">
             <form
-              className="relative w-full"
+              className="replichat-relative replichat-w-full"
               onSubmit={customSubmit}
               onKeyDown={onKeyDown}
             >
@@ -190,36 +190,36 @@ const Chat = (props) => {
                 placeholder="Type your message..."
                 value={input}
                 onChange={handleInputChange}
-                className="h-16 min-h-0 w-full resize-none rounded-xl border border-neutral-400 px-4 pr-16 shadow-sm scroll"
+                className="replichat-h-16 replichat-min-h-0 replichat-w-full replichat-resize-none replichat-rounded-xl replichat-border replichat-border-neutral-400 replichat-px-4 replichat-pr-16 replichat-shadow-sm replichat-scroll"
               />
               {isLoading ? (
                 <Button
                   type="button"
                   size="icon"
-                  className="absolute top-1/2 right-3 -translate-y-1/2"
+                  className="replichat-absolute replichat-top-1/2 replichat-right-3 -replichat-translate-y-1/2"
                   onClick={stop}
                 >
-                  <IconPlayerStopFilled className="h-4 w-4" />
-                  <span className="sr-only">Stop</span>
+                  <IconPlayerStopFilled className="replichat-h-4 replichat-w-4" />
+                  <span className="replichat-sr-only">Stop</span>
                 </Button>
               ) : (
                 <Button
                   type="submit"
                   size="icon"
-                  className="absolute top-1/2 right-3 -translate-y-1/2"
+                  className="replichat-absolute replichat-top-1/2 replichat-right-3 -replichat-translate-y-1/2"
                 >
-                  <IconSend className="h-4 w-4" />
-                  <span className="sr-only">Send</span>
+                  <IconSend className="replichat-h-4 replichat-w-4" />
+                  <span className="replichat-sr-only">Send</span>
                 </Button>
               )}
             </form>
-            <div className="flex items-center gap-2">
-              <p className="text-sm">Powered by</p>
+            <div className="replichat-flex replichat-items-center replichat-gap-2">
+              <p className="replichat-text-sm">Powered by</p>
               <a
                 href="https://replichat.com"
                 target="_blank"
                 rel="noreferrer"
-                className="flex items-center gap-1"
+                className="replichat-flex replichat-items-center replichat-gap-1"
               >
                 <img
                   src="https://chat.richardkovacs.dev/icon.png"
@@ -234,14 +234,14 @@ const Chat = (props) => {
         </Card>
       ) : null}
       <Button
-        className="w-20 h-20 rounded-full bg-background text-text"
+        className="replichat-w-20 replichat-h-20 replichat-rounded-full replichat-bg-background replichat-text-text"
         variant="ghost"
         onClick={() => setOpen(!open)}
       >
         {open ? (
           <IconX size="50" />
         ) : (
-          <IconMessageDots size="50" className="rotate-6" />
+          <IconMessageDots size="50" className="replichat-rotate-6" />
         )}
       </Button>
     </div>

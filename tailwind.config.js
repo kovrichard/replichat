@@ -73,4 +73,5 @@ module.exports = {
     },
   },
   plugins: [require("tailwindcss-animate")],
+  prefix: "replichat-",
 }

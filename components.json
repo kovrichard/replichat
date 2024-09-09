@@ -4,7 +4,8 @@
     "config": "tailwind.config.js",
     "css": "src/styles/globals.css",
     "baseColor": "zinc",
-    "cssVariables": true
+    "cssVariables": true,
+    "prefix": "replichat-"
   },
   "rsc": false,
   "tsx": false,

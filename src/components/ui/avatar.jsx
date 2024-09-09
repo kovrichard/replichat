@@ -6,7 +6,10 @@ import { cn } from "@/lib/utils"
 const Avatar = React.forwardRef(({ className, ...props }, ref) => (
   <AvatarPrimitive.Root
     ref={ref}
-    className={cn("relative flex h-10 w-10 shrink-0 overflow-hidden rounded-full", className)}
+    className={cn(
+      "replichat-relative replichat-flex replichat-h-10 replichat-w-10 replichat-shrink-0 replichat-overflow-hidden replichat-rounded-full",
+      className
+    )}
     {...props} />
 ))
 Avatar.displayName = AvatarPrimitive.Root.displayName
@@ -14,7 +17,7 @@ Avatar.displayName = AvatarPrimitive.Root.displayName
 const AvatarImage = React.forwardRef(({ className, ...props }, ref) => (
   <AvatarPrimitive.Image
     ref={ref}
-    className={cn("aspect-square h-full w-full", className)}
+    className={cn("replichat-aspect-square replichat-h-full replichat-w-full", className)}
     {...props} />
 ))
 AvatarImage.displayName = AvatarPrimitive.Image.displayName
@@ -23,7 +26,7 @@ const AvatarFallback = React.forwardRef(({ className, ...props }, ref) => (
   <AvatarPrimitive.Fallback
     ref={ref}
     className={cn(
-      "flex h-full w-full items-center justify-center rounded-full bg-muted",
+      "replichat-flex replichat-h-full replichat-w-full replichat-items-center replichat-justify-center replichat-rounded-full replichat-bg-muted",
       className
     )}
     {...props} />

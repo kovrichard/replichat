@@ -5,25 +5,25 @@ import { cva } from "class-variance-authority";
 import { cn } from "@/lib/utils"
 
 const buttonVariants = cva(
-  "inline-flex items-center justify-center whitespace-nowrap rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50",
+  "replichat-inline-flex replichat-items-center replichat-justify-center replichat-whitespace-nowrap replichat-rounded-md replichat-text-sm replichat-font-medium replichat-ring-offset-background replichat-transition-colors focus-visible:replichat-outline-none focus-visible:replichat-ring-2 focus-visible:replichat-ring-ring focus-visible:replichat-ring-offset-2 disabled:replichat-pointer-events-none disabled:replichat-opacity-50",
   {
     variants: {
       variant: {
-        default: "bg-primary text-primary-foreground hover:bg-primary/90",
+        default: "replichat-bg-primary replichat-text-primary-foreground hover:replichat-bg-primary/90",
         destructive:
-          "bg-destructive text-destructive-foreground hover:bg-destructive/90",
+          "replichat-bg-destructive replichat-text-destructive-foreground hover:replichat-bg-destructive/90",
         outline:
-          "border border-input bg-background hover:bg-accent hover:text-accent-foreground",
+          "replichat-border replichat-border-input replichat-bg-background hover:replichat-bg-accent hover:replichat-text-accent-foreground",
         secondary:
-          "bg-secondary text-secondary-foreground hover:bg-secondary/80",
-        ghost: "hover:bg-accent hover:text-accent-foreground",
-        link: "text-primary underline-offset-4 hover:underline",
+          "replichat-bg-secondary replichat-text-secondary-foreground hover:replichat-bg-secondary/80",
+        ghost: "hover:replichat-bg-accent hover:replichat-text-accent-foreground",
+        link: "replichat-text-primary replichat-underline-offset-4 hover:replichat-underline",
       },
       size: {
-        default: "h-10 px-4 py-2",
-        sm: "h-9 rounded-md px-3",
-        lg: "h-11 rounded-md px-8",
-        icon: "h-10 w-10",
+        default: "replichat-h-10 replichat-px-4 replichat-py-2",
+        sm: "replichat-h-9 replichat-rounded-md replichat-px-3",
+        lg: "replichat-h-11 replichat-rounded-md replichat-px-8",
+        icon: "replichat-h-10 replichat-w-10",
       },
     },
     defaultVariants: {

@@ -6,9 +6,9 @@ import { cn } from "@/lib/utils"
 const ScrollArea = React.forwardRef(({ className, children, ...props }, ref) => (
   <ScrollAreaPrimitive.Root
     ref={ref}
-    className={cn("relative overflow-hidden", className)}
+    className={cn("replichat-relative replichat-overflow-hidden", className)}
     {...props}>
-    <ScrollAreaPrimitive.Viewport className="h-full w-full rounded-[inherit]">
+    <ScrollAreaPrimitive.Viewport className="replichat-h-full replichat-w-full replichat-rounded-[inherit]">
       {children}
     </ScrollAreaPrimitive.Viewport>
     <ScrollBar />
@@ -22,15 +22,16 @@ const ScrollBar = React.forwardRef(({ className, orientation = "vertical", ...pr
     ref={ref}
     orientation={orientation}
     className={cn(
-      "flex touch-none select-none transition-colors",
+      "replichat-flex replichat-touch-none replichat-select-none replichat-transition-colors",
       orientation === "vertical" &&
-        "h-full w-2.5 border-l border-l-transparent p-[1px]",
+        "replichat-h-full replichat-w-2.5 replichat-border-l replichat-border-l-transparent replichat-p-[1px]",
       orientation === "horizontal" &&
-        "h-2.5 flex-col border-t border-t-transparent p-[1px]",
+        "replichat-h-2.5 replichat-flex-col replichat-border-t replichat-border-t-transparent replichat-p-[1px]",
       className
     )}
     {...props}>
-    <ScrollAreaPrimitive.ScrollAreaThumb className="relative flex-1 rounded-full bg-border" />
+    <ScrollAreaPrimitive.ScrollAreaThumb
+      className="replichat-relative replichat-flex-1 replichat-rounded-full replichat-bg-border" />
   </ScrollAreaPrimitive.ScrollAreaScrollbar>
 ))
 ScrollBar.displayName = ScrollAreaPrimitive.ScrollAreaScrollbar.displayName
