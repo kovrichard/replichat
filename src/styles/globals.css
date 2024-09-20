@@ -2,6 +2,24 @@
 @tailwind components;
 @tailwind utilities;
 
+@font-face {
+  font-family: "Inter";
+  src: url("https://chat.richardkovacs.dev/Inter-Medium.woff") format("woff");
+  font-weight: 500;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: "Inter";
+  src: url("https://chat.richardkovacs.dev/Inter-SemiBold.woff") format("woff");
+  font-weight: 600;
+  font-style: normal;
+}
+
+#replichat-root {
+  font-family: "Inter", sans-serif;
+}
+
 @layer base {
   #replichat-root {
     --background: 0 0% 100%;
@@ -81,33 +99,33 @@
 }
 
 @keyframes slideIn {
-    0% {
-        opacity: 0;
-        transform: translateX(100%);
-    }
-    100% {
-        opacity: 1;
-        transform: translateX(0);
-    }
+  0% {
+    opacity: 0;
+    transform: translateX(100%);
+  }
+  100% {
+    opacity: 1;
+    transform: translateX(0);
+  }
 }
 
 @keyframes slideOut {
-    0% {
-        opacity: 1;
-        transform: translateX(0);
-    }
-    100% {
-        opacity: 0;
-        transform: translateX(100%);
-    }
+  0% {
+    opacity: 1;
+    transform: translateX(0);
+  }
+  100% {
+    opacity: 0;
+    transform: translateX(100%);
+  }
 }
 
 .slide-in {
-    animation: slideIn 0.5s ease-out forwards;
+  animation: slideIn 0.5s ease-out forwards;
 }
 
 .slide-out {
-    animation: slideOut 0.5s ease-in forwards;
+  animation: slideOut 0.5s ease-in forwards;
 }
 
 .scroll::-webkit-scrollbar {
