@@ -96,11 +96,11 @@ const Chat = (props) => {
   }, [messages]);
 
   return (
-    <div className="fixed flex flex-col items-end right-10 bottom-10 gap-4">
+    <div className="fixed flex flex-col items-end right-4 bottom-4 sm:right-10 sm:bottom-10 gap-4">
       {open ? (
         <Card
           className={cn(
-            "sm:w-96 rounded-2xl shadow-lg bg-background",
+            "-mr-4 sm:w-96 rounded-2xl shadow-lg bg-background",
             open ? "slide-in" : "slide-out"
           )}
         >
