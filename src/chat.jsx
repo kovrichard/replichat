@@ -73,9 +73,17 @@ const Chat = (props) => {
   };
 
   React.useEffect(() => {
-    if (messages.length === 0) {
+    if (messages.length > 0) {
+      localStorage.setItem("messages", JSON.stringify(messages));
+    }
+
+    if (localStorage.getItem("chatId") === null) {
       const id = createId();
       localStorage.setItem("chatId", id);
+      localStorage.setItem("messages", JSON.stringify([]));
+      setMessages([]);
+    } else {
+      setMessages(JSON.parse(localStorage.getItem("messages")) || []);
     }
 
     if (chatContainerRef.current) {
@@ -114,7 +122,13 @@ const Chat = (props) => {
               <TooltipProvider>
                 <Tooltip delayDuration={100}>
                   <TooltipTrigger className="absolute right-3 bottom-3" asChild>
-                    <Button size="icon" onClick={() => setMessages([])}>
+                    <Button
+                      size="icon"
+                      onClick={() => {
+                        localStorage.removeItem("chatId");
+                        setMessages([]);
+                      }}
+                    >
                       <IconMessage2Plus className="h-5 w-5" />
                     </Button>
                   </TooltipTrigger>
@@ -237,7 +251,7 @@ const Chat = (props) => {
         </Card>
       ) : null}
       <Button
-        className="w-20 h-20 rounded-full bg-background text-text"
+        className="w-16 h-16 rounded-full bg-background text-text p-3"
         variant="ghost"
         onClick={() => setOpen(!open)}
       >
