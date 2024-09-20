@@ -151,8 +151,11 @@ const Chat = (props) => {
                         "rounded-lg bg-muted p-3 text-sm",
                         message.role === "user"
                           ? ""
-                          : "bg-primary text-primary-foreground"
+                          : "bg-primary text-primary-foreground break-words"
                       )}
+                      style={{
+                        wordBreak: "break-word",
+                      }}
                     >
                       {message.content.split("\n").map((line, i) => (
                         <p key={i}>{line}</p>
