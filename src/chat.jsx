@@ -31,8 +31,8 @@ const Chat = (props) => {
     title: "AI Assistant",
     userInitials: "US",
     assistantInitials: "AI",
-    userIcon: "https://chat.richardkovacs.dev/profile.svg",
-    botIcon: "https://chat.richardkovacs.dev/richard-kovacs.webp",
+    //userIcon: "https://chat.richardkovacs.dev/profile.svg",
+    //botIcon: "https://chat.richardkovacs.dev/richard-kovacs.webp",
     apiKey: "",
     ...props.config,
   };
