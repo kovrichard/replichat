@@ -96,11 +96,11 @@ const Chat = (props) => {
   }, [messages]);
 
   return (
-    <div className="fixed flex flex-col items-end right-4 bottom-4 sm:right-10 sm:bottom-10 gap-4 z-[100]">
+    <div className="fixed flex flex-col items-end gap-4 z-[100]">
       {open ? (
         <Card
           className={cn(
-            "-mr-4 sm:w-96 rounded-2xl shadow-lg bg-background",
+            "fixed flex flex-col w-svw h-svh sm:h-auto sm:w-96 right-0 bottom-0 sm:right-10 sm:bottom-28 rounded-2xl shadow-lg bg-background transition-transform duration-300 z-[110]",
             open ? "slide-in" : "slide-out"
           )}
         >
@@ -135,9 +135,17 @@ const Chat = (props) => {
                   <TooltipContent>New conversation</TooltipContent>
                 </Tooltip>
               </TooltipProvider>
+              <Button
+                size="icon"
+                variant="ghost"
+                onClick={() => setOpen(false)}
+                className="absolute right-3 top-1 sm:hidden"
+              >
+                <IconX className="h-5 w-5" />
+              </Button>
             </div>
           </CardHeader>
-          <ScrollArea className="h-[calc(100svh-25rem)] hxl:h-[400px]">
+          <ScrollArea className="flex-1 sm:flex-none sm:h-[calc(100svh-25rem)] hxl:h-[400px]">
             <CardContent className="p-4 grid gap-4" ref={chatContainerRef}>
               {error ? (
                 <div>
@@ -251,7 +259,7 @@ const Chat = (props) => {
         </Card>
       ) : null}
       <Button
-        className="w-16 h-16 rounded-full bg-background text-text p-3"
+        className="fixed w-16 h-16 rounded-full bg-background text-text p-3 right-4 bottom-4 sm:right-10 sm:bottom-10"
         variant="ghost"
         onClick={() => setOpen(!open)}
       >
