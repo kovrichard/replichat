@@ -100,7 +100,7 @@ const Chat = (props) => {
       {open ? (
         <Card
           className={cn(
-            "fixed flex flex-col w-svw h-svh sm:h-auto sm:w-96 right-0 bottom-0 sm:right-10 sm:bottom-28 rounded-2xl shadow-lg bg-background transition-transform duration-300 z-[110]",
+            "fixed flex flex-col w-svw h-svh sm:h-auto sm:w-96 right-0 bottom-0 sm:right-10 sm:bottom-28 rounded-none sm:rounded-2xl shadow-lg bg-background transition-transform duration-300 z-[110]",
             open ? "slide-in" : "slide-out"
           )}
         >
