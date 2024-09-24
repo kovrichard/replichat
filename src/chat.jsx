@@ -137,7 +137,7 @@ const Chat = (props) => {
               </TooltipProvider>
             </div>
           </CardHeader>
-          <ScrollArea className="h-[400px]">
+          <ScrollArea className="h-[calc(100svh-25rem)] hxl:h-[400px]">
             <CardContent className="p-4 grid gap-4" ref={chatContainerRef}>
               {error ? (
                 <div>
