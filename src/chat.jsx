@@ -96,7 +96,7 @@ const Chat = (props) => {
   }, [messages]);
 
   return (
-    <div className="fixed flex flex-col items-end right-4 bottom-4 sm:right-10 sm:bottom-10 gap-4">
+    <div className="fixed flex flex-col items-end right-4 bottom-4 sm:right-10 sm:bottom-10 gap-4 z-[100]">
       {open ? (
         <Card
           className={cn(
