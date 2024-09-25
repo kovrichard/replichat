@@ -86,13 +86,13 @@ const Chat = (props) => {
       setMessages(JSON.parse(localStorage.getItem("messages")) || []);
     }
 
-    /*if (chatContainerRef.current) {
+    if (chatContainerRef.current && isLoading) {
       chatContainerRef.current.scrollIntoView({
         behavior: "smooth",
         block: "end",
         inline: "nearest",
       });
-    }*/
+    }
   }, [messages]);
 
   return (
