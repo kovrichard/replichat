@@ -100,7 +100,7 @@ const Chat = (props) => {
       {open ? (
         <Card
           className={cn(
-            "fixed flex flex-col w-svw h-svh sm:h-auto sm:w-96 right-0 bottom-0 sm:right-10 sm:bottom-28 rounded-none sm:rounded-2xl shadow-lg bg-background transition-transform duration-300 z-[110]",
+            "fixed flex flex-col w-svw h-svh sm:h-auto sm:w-96 right-0 bottom-0 sm:right-8 sm:bottom-28 rounded-none sm:rounded-2xl shadow-lg bg-background transition-transform duration-300 z-[110]",
             open ? "slide-in" : "slide-out"
           )}
         >
@@ -145,7 +145,7 @@ const Chat = (props) => {
               </Button>
             </div>
           </CardHeader>
-          <ScrollArea className="flex-1 sm:flex-none sm:h-[calc(100svh-25rem)] hxl:h-[400px]">
+          <ScrollArea className="flex-1 sm:flex-none sm:h-[calc(100svh-24rem)] hxl:h-[400px]">
             <CardContent className="p-4 grid gap-4" ref={chatContainerRef}>
               {error ? (
                 <div>
@@ -259,7 +259,7 @@ const Chat = (props) => {
         </Card>
       ) : null}
       <Button
-        className="fixed w-16 h-16 rounded-full bg-background text-text p-3 right-4 bottom-4 sm:right-10 sm:bottom-10"
+        className="fixed w-16 h-16 rounded-full bg-background text-text p-3 right-4 bottom-4 sm:right-8 sm:bottom-8"
         variant="ghost"
         onClick={() => setOpen(!open)}
       >
