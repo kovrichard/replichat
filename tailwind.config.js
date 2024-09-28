@@ -75,5 +75,5 @@ module.exports = {
     },
   },
   plugins: [require("tailwindcss-animate")],
-  important: "#replichat-root",
+  important: "#askthing-root",
 }

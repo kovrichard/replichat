@@ -241,18 +241,18 @@ const Chat = (props) => {
             <div className="flex items-center gap-2">
               <p className="text-sm">Powered by</p>
               <a
-                href="https://replichat.com"
+                href="https://askth.ing"
                 target="_blank"
                 rel="noreferrer"
                 className="flex items-center gap-1"
               >
                 <img
-                  src="https://chat.richardkovacs.dev/icon.png"
-                  alt="Replichat"
+                  src="https://cdn.askth.ing/icon.png"
+                  alt="askthing"
                   width={20}
                   height={20}
                 />
-                <p>Replichat</p>
+                <p>askthing</p>
               </a>
             </div>
           </CardFooter>

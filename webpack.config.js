@@ -21,7 +21,7 @@ module.exports = {
   output: {
     path: path.resolve(__dirname, 'dist'),
     filename: 'chat.js',
-    library: 'replichat',
+    library: 'askthing',
     libraryTarget: 'umd'
   },
   module: {

@@ -4,24 +4,24 @@
 
 @font-face {
   font-family: "Inter";
-  src: url("https://chat.richardkovacs.dev/Inter-Medium.woff") format("woff");
+  src: url("https://cdn.askth.ing/Inter-Medium.woff") format("woff");
   font-weight: 500;
   font-style: normal;
 }
 
 @font-face {
   font-family: "Inter";
-  src: url("https://chat.richardkovacs.dev/Inter-SemiBold.woff") format("woff");
+  src: url("https://cdn.askth.ing/Inter-SemiBold.woff") format("woff");
   font-weight: 600;
   font-style: normal;
 }
 
-#replichat-root {
+#askthing-root {
   font-family: "Inter", sans-serif;
 }
 
 @layer base {
-  #replichat-root {
+  #askthing-root {
     --background: 0 0% 100%;
     --foreground: 222.2 47.4% 11.2%;
 
@@ -54,7 +54,7 @@
     --radius: 0.5rem;
   }
 
-  #replichat-root.dark {
+  #askthing-root.dark {
     --background: 224 71% 4%;
     --foreground: 213 31% 91%;
 

@@ -9,7 +9,7 @@ const config = {
 };
 
 if (process.env.NODE_ENV === 'development') {
-    const domNode = document.getElementById('replichat-root');
+    const domNode = document.getElementById('askthing-root');
     const root = createRoot(domNode);
     root.render(<Chat config={config} />);
 } else {

@@ -3,7 +3,7 @@ import Chat from './chat';
 import { createRoot } from 'react-dom/client';
 
 export function initializeChatbot() {
-  const chatbotScript = document.querySelector('script[data-replichat-bot]');
+  const chatbotScript = document.querySelector('script[data-askthing-bot]');
 
   if (!chatbotScript) {
     console.error('Chatbot script not found');
@@ -11,7 +11,7 @@ export function initializeChatbot() {
   }
 
   let config = {};
-  const configAttr = chatbotScript.getAttribute('data-replichat-config');
+  const configAttr = chatbotScript.getAttribute('data-askthing-config');
   if (configAttr) {
     try {
       config = JSON.parse(configAttr);
@@ -21,7 +21,7 @@ export function initializeChatbot() {
   }
 
   const chatbotContainer = document.createElement('div');
-  chatbotContainer.id = 'replichat-root';
+  chatbotContainer.id = 'askthing-root';
   document.body.appendChild(chatbotContainer);
 
   const root = createRoot(chatbotContainer);
