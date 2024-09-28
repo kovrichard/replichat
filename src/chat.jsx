@@ -25,12 +25,8 @@ import {
 } from "@/components/ui/tooltip";
 import { Textarea } from "@/components/ui/textarea";
 import { createId } from "@paralleldrive/cuid2";
-import { Input } from "@/components/ui/input";
 
 const Chat = (props) => {
-  const [name, setName] = React.useState("");
-  const [email, setEmail] = React.useState("");
-
   const config = {
     title: "AI Assistant",
     userInitials: "US",
@@ -54,7 +50,7 @@ const Chat = (props) => {
     error,
     data,
   } = useChat({
-    api: process.env.BACKEND_URL,
+    api: `${process.env.BACKEND_URL}/api/chat`,
     keepLastMessageOnError: true,
   });
 
@@ -75,11 +71,6 @@ const Chat = (props) => {
     if (e.key === "Enter" && !e.shiftKey) {
       customSubmit(e);
     }
-  };
-
-  const handleEmailSubmit = (e) => {
-    e.preventDefault();
-    console.log(name, email);
   };
 
   React.useEffect(() => {
@@ -214,29 +205,6 @@ const Chat = (props) => {
                     ...
                   </span>
                 </div>
-              ) : null}
-              {messages.length > 1 &&
-              messages[messages.length - 2]?.toolInvocations &&
-              data &&
-              data.length > 0 &&
-              data[data.length - 1]?.action === "getEmail" ? (
-                <form className="grid place-items-center gap-4 w-full bg-muted rounded-lg p-4">
-                  <Input
-                    type="text"
-                    placeholder="John Doe"
-                    value={name}
-                    onChange={({ target }) => setName(target.value)}
-                  />
-                  <Input
-                    type="email"
-                    placeholder="johndoe@example.com"
-                    value={email}
-                    onChange={({ target }) => setEmail(target.value)}
-                  />
-                  <Button type="button" onClick={handleEmailSubmit}>
-                    Submit
-                  </Button>
-                </form>
               ) : null}
             </CardContent>
           </ScrollArea>
