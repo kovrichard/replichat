@@ -25,8 +25,12 @@ import {
 } from "@/components/ui/tooltip";
 import { Textarea } from "@/components/ui/textarea";
 import { createId } from "@paralleldrive/cuid2";
+import { Input } from "@/components/ui/input";
 
 const Chat = (props) => {
+  const [name, setName] = React.useState("");
+  const [email, setEmail] = React.useState("");
+
   const config = {
     title: "AI Assistant",
     userInitials: "US",
@@ -48,6 +52,7 @@ const Chat = (props) => {
     handleSubmit,
     stop,
     error,
+    data,
   } = useChat({
     api: process.env.BACKEND_URL,
     keepLastMessageOnError: true,
@@ -72,6 +77,11 @@ const Chat = (props) => {
     }
   };
 
+  const handleEmailSubmit = (e) => {
+    e.preventDefault();
+    console.log(name, email);
+  };
+
   React.useEffect(() => {
     if (messages.length > 0) {
       localStorage.setItem("messages", JSON.stringify(messages));
@@ -86,7 +96,7 @@ const Chat = (props) => {
       setMessages(JSON.parse(localStorage.getItem("messages")) || []);
     }
 
-    if (chatContainerRef.current && isLoading) {
+    if (chatContainerRef.current && (isLoading || data)) {
       chatContainerRef.current.scrollIntoView({
         behavior: "smooth",
         block: "end",
@@ -152,45 +162,47 @@ const Chat = (props) => {
                   <p>{error.message}</p>
                 </div>
               ) : (
-                messages.map((message) => (
-                  <div
-                    key={message.id}
-                    className={cn(
-                      "flex items-start gap-3",
-                      message.role === "user" ? "justify-end" : ""
-                    )}
-                  >
-                    {message.role !== "user" ? (
-                      <Avatar className="h-8 w-8">
-                        <AvatarImage src={config.botIcon} />
-                        <AvatarFallback>
-                          {config.assistantInitials}
-                        </AvatarFallback>
-                      </Avatar>
-                    ) : null}
+                messages
+                  .filter((message) => !message.toolInvocations)
+                  .map((message) => (
                     <div
+                      key={message.id}
                       className={cn(
-                        "rounded-lg bg-muted p-3 text-sm",
-                        message.role === "user"
-                          ? ""
-                          : "bg-primary text-primary-foreground break-words"
+                        "flex items-start gap-3",
+                        message.role === "user" ? "justify-end" : ""
                       )}
-                      style={{
-                        wordBreak: "break-word",
-                      }}
                     >
-                      {message.content.split("\n").map((line, i) => (
-                        <p key={i}>{line}</p>
-                      ))}
+                      {message.role === "assistant" ? (
+                        <Avatar className="h-8 w-8">
+                          <AvatarImage src={config.botIcon} />
+                          <AvatarFallback>
+                            {config.assistantInitials}
+                          </AvatarFallback>
+                        </Avatar>
+                      ) : null}
+                      <div
+                        className={cn(
+                          "rounded-lg bg-muted p-3 text-sm",
+                          message.role === "user"
+                            ? ""
+                            : "bg-primary text-primary-foreground break-words"
+                        )}
+                        style={{
+                          wordBreak: "break-word",
+                        }}
+                      >
+                        {message.content.split("\n").map((line, i) => (
+                          <p key={i}>{line}</p>
+                        ))}
+                      </div>
+                      {message.role === "user" ? (
+                        <Avatar className="h-8 w-8">
+                          <AvatarImage src={config.userIcon} />
+                          <AvatarFallback>{config.userInitials}</AvatarFallback>
+                        </Avatar>
+                      ) : null}
                     </div>
-                    {message.role === "user" ? (
-                      <Avatar className="h-8 w-8">
-                        <AvatarImage src={config.userIcon} />
-                        <AvatarFallback>{config.userInitials}</AvatarFallback>
-                      </Avatar>
-                    ) : null}
-                  </div>
-                ))
+                  ))
               )}
               {isLoading && messages[messages.length - 1].role === "user" ? (
                 <div className="flex items-start gap-3">
@@ -202,6 +214,29 @@ const Chat = (props) => {
                     ...
                   </span>
                 </div>
+              ) : null}
+              {messages.length > 1 &&
+              messages[messages.length - 2]?.toolInvocations &&
+              data &&
+              data.length > 0 &&
+              data[data.length - 1]?.action === "getEmail" ? (
+                <form className="grid place-items-center gap-4 w-full bg-muted rounded-lg p-4">
+                  <Input
+                    type="text"
+                    placeholder="John Doe"
+                    value={name}
+                    onChange={({ target }) => setName(target.value)}
+                  />
+                  <Input
+                    type="email"
+                    placeholder="johndoe@example.com"
+                    value={email}
+                    onChange={({ target }) => setEmail(target.value)}
+                  />
+                  <Button type="button" onClick={handleEmailSubmit}>
+                    Submit
+                  </Button>
+                </form>
               ) : null}
             </CardContent>
           </ScrollArea>
