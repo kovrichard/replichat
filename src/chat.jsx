@@ -31,9 +31,14 @@ const Chat = (props) => {
     title: "AI Assistant",
     userInitials: "US",
     assistantInitials: "AI",
+    primaryColor: "#000000",
+    userColor: "#F1F5F9",
+    botColor: "#0F172A",
+    primaryColorForeground: "#FFFFFF",
+    userColorForeground: "#000000",
+    botColorForeground: "#FFFFFF",
     //userIcon: "https://chat.richardkovacs.dev/profile.svg",
     //botIcon: "https://chat.richardkovacs.dev/richard-kovacs.webp",
-    apiKey: "",
     ...props.config,
   };
 
@@ -48,7 +53,6 @@ const Chat = (props) => {
     handleSubmit,
     stop,
     error,
-    data,
   } = useChat({
     api: `${process.env.BACKEND_URL}/api/chat`,
     keepLastMessageOnError: true,
@@ -84,10 +88,10 @@ const Chat = (props) => {
       localStorage.setItem("messages", JSON.stringify([]));
       setMessages([]);
     } else {
-      setMessages(JSON.parse(localStorage.getItem("messages")) || []);
+      setMessages(JSON.parse(localStorage.getItem("messages") ?? "[]"));
     }
 
-    if (chatContainerRef.current && (isLoading || data)) {
+    if (chatContainerRef.current && isLoading) {
       chatContainerRef.current.scrollIntoView({
         behavior: "smooth",
         block: "end",
@@ -101,7 +105,7 @@ const Chat = (props) => {
       {open ? (
         <Card
           className={cn(
-            "fixed flex flex-col w-svw h-svh sm:h-auto sm:w-96 right-0 bottom-0 sm:right-8 sm:bottom-28 rounded-none sm:rounded-2xl shadow-lg bg-background transition-transform duration-300 z-[110]",
+            "fixed flex flex-col w-svw h-svh sm:h-auto sm:w-96 right-0 bottom-0 sm:right-8 sm:bottom-28 rounded-none sm:rounded-2xl shadow-lg bg-[#FFFFFF] transition-transform duration-300 z-[110]",
             open ? "slide-in" : "slide-out"
           )}
         >
@@ -110,7 +114,6 @@ const Chat = (props) => {
               <div className="relative">
                 <div className="absolute z-10 -right-[2px] -top-[2px]">
                   <span className="relative flex h-3 w-3">
-                    <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-green-400 opacity-75"></span>
                     <span className="relative inline-flex rounded-full h-3 w-3 bg-green-500"></span>
                   </span>
                 </div>
@@ -125,6 +128,10 @@ const Chat = (props) => {
                   <TooltipTrigger className="absolute right-3 bottom-3" asChild>
                     <Button
                       size="icon"
+                      style={{
+                        backgroundColor: config.primaryColor,
+                        color: config.primaryColorForeground,
+                      }}
                       onClick={() => {
                         localStorage.removeItem("chatId");
                         setMessages([]);
@@ -149,7 +156,7 @@ const Chat = (props) => {
           <ScrollArea className="flex-1 sm:flex-none sm:h-[calc(100svh-24rem)] hxl:h-[400px]">
             <CardContent className="p-4 grid gap-4" ref={chatContainerRef}>
               {error ? (
-                <div>
+                <div className="w-full p-4 text-center border border-destructive text-destructive rounded-md">
                   <p>{error.message}</p>
                 </div>
               ) : (
@@ -173,13 +180,21 @@ const Chat = (props) => {
                       ) : null}
                       <div
                         className={cn(
-                          "rounded-lg bg-muted p-3 text-sm",
+                          "rounded-xl bg-muted p-3 text-sm break-words max-w-[70%]",
                           message.role === "user"
-                            ? ""
-                            : "bg-primary text-primary-foreground break-words"
+                            ? "rounded-tr-sm"
+                            : "rounded-tl-sm"
                         )}
                         style={{
                           wordBreak: "break-word",
+                          backgroundColor:
+                            message.role === "user"
+                              ? config.userColor
+                              : config.botColor,
+                          color:
+                            message.role === "user"
+                              ? config.userColorForeground
+                              : config.botColorForeground,
                         }}
                       >
                         {message.content.split("\n").map((line, i) => (
@@ -201,7 +216,13 @@ const Chat = (props) => {
                     <AvatarImage src={config.botIcon} />
                     <AvatarFallback>{config.assistantInitials}</AvatarFallback>
                   </Avatar>
-                  <span className="rounded-lg bg-primary text-primary-foreground p-3 text-sm animate-pulse">
+                  <span
+                    className="rounded-xl rounded-tl-sm p-3 text-sm animate-pulse"
+                    style={{
+                      backgroundColor: config.botColor,
+                      color: config.botColorForeground,
+                    }}
+                  >
                     ...
                   </span>
                 </div>
@@ -218,7 +239,7 @@ const Chat = (props) => {
                 placeholder="Type your message..."
                 value={input}
                 onChange={handleInputChange}
-                className="h-16 min-h-0 w-full resize-none rounded-xl border border-neutral-400 px-4 pr-16 shadow-sm scroll"
+                className="h-16 min-h-0 w-full resize-none rounded-xl border border-neutral-400 px-4 pr-16 shadow-sm scroll bg-[#FFFFFF]"
               />
               {isLoading ? (
                 <Button
@@ -226,6 +247,10 @@ const Chat = (props) => {
                   size="icon"
                   className="absolute top-1/2 right-3 -translate-y-1/2"
                   onClick={stop}
+                  style={{
+                    backgroundColor: config.primaryColor,
+                    color: config.primaryColorForeground,
+                  }}
                 >
                   <IconPlayerStopFilled className="h-4 w-4" />
                   <span className="sr-only">Stop</span>
@@ -235,6 +260,10 @@ const Chat = (props) => {
                   type="submit"
                   size="icon"
                   className="absolute top-1/2 right-3 -translate-y-1/2"
+                  style={{
+                    backgroundColor: config.primaryColor,
+                    color: config.primaryColorForeground,
+                  }}
                 >
                   <IconSend className="h-4 w-4" />
                   <span className="sr-only">Send</span>
@@ -242,7 +271,7 @@ const Chat = (props) => {
               )}
             </form>
             <div className="flex items-center gap-2">
-              <p className="text-sm">Powered by</p>
+              <p>Powered by</p>
               <a
                 href="https://askth.ing"
                 target="_blank"
