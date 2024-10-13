@@ -25,6 +25,9 @@ import {
 } from "@/components/ui/tooltip";
 import { Textarea } from "@/components/ui/textarea";
 import { createId } from "@paralleldrive/cuid2";
+import { evaluate } from "@mdx-js/mdx";
+import * as provider from "@mdx-js/react";
+import * as runtime from "react/jsx-runtime";
 
 const Chat = (props) => {
   const config = {
@@ -44,6 +47,8 @@ const Chat = (props) => {
 
   const chatContainerRef = React.useRef(null);
   const [open, setOpen] = React.useState(false);
+  const [parsedMessages, setParsedMessages] = React.useState([]);
+  const [latestMessage, setLatestMessage] = React.useState(null);
   const {
     messages,
     setMessages,
@@ -56,7 +61,23 @@ const Chat = (props) => {
   } = useChat({
     api: `${process.env.BACKEND_URL}/api/chat`,
     keepLastMessageOnError: true,
+    onFinish(message) {
+      appendToLocalStorage(message);
+    },
   });
+
+  function appendToLocalStorage(message) {
+    const savedMessages = JSON.parse(localStorage.getItem("messages") ?? "[]");
+
+    if (message.id === savedMessages[savedMessages.length - 1]?.id) {
+      return;
+    }
+
+    localStorage.setItem(
+      "messages",
+      JSON.stringify([...savedMessages, message])
+    );
+  }
 
   function customSubmit(e) {
     if (error !== undefined) {
@@ -77,20 +98,56 @@ const Chat = (props) => {
     }
   };
 
+  async function mdxToHtml(mdxString) {
+    const { default: Content } = await evaluate(mdxString, {
+      ...provider,
+      ...runtime,
+    });
+
+    return <Content />;
+  }
+
+  async function parseAndAddMessage(message) {
+    const parsedMessage = await mdxToHtml(message.content);
+    setParsedMessages((prev) => [
+      ...prev,
+      {
+        ...message,
+        component: parsedMessage,
+      },
+    ]);
+  }
+
   React.useEffect(() => {
-    if (messages.length > 0) {
-      localStorage.setItem("messages", JSON.stringify(messages));
-    }
+    if (!messages || messages.length === 0) return;
+    // Iterate through all messages
+    const handleMessages = async () => {
+      messages.forEach(async (message, index) => {
+        const isLastMessage = index === messages.length - 1;
 
-    if (localStorage.getItem("chatId") === null) {
-      const id = createId();
-      localStorage.setItem("chatId", id);
-      localStorage.setItem("messages", JSON.stringify([]));
-      setMessages([]);
-    } else {
-      setMessages(JSON.parse(localStorage.getItem("messages") ?? "[]"));
-    }
+        if (isLastMessage) {
+          // Handle the latest message
+          if (isLoading && message.role === "assistant") {
+            // Message is still streaming
+            setLatestMessage(message);
+          } else {
+            // Message has finished streaming; parse and add to parsedMessages
+            await parseAndAddMessage(message);
+            setLatestMessage(null);
+          }
+        } else {
+          // Handle previous messages
+          const alreadyParsed = parsedMessages.find((m) => m.id === message.id);
+          if (!alreadyParsed) {
+            await parseAndAddMessage(message);
+          }
+        }
+      });
+    };
 
+    handleMessages();
+
+    // Scroll to bottom when assistant is typing
     if (chatContainerRef.current && isLoading) {
       chatContainerRef.current.scrollIntoView({
         behavior: "smooth",
@@ -98,7 +155,27 @@ const Chat = (props) => {
         inline: "nearest",
       });
     }
-  }, [messages]);
+  }, [messages, isLoading]);
+
+  React.useEffect(() => {
+    // Create chatId if not exists
+    if (localStorage.getItem("chatId") === null) {
+      const id = createId();
+      localStorage.setItem("chatId", id);
+    }
+
+    // Append user message to local storage
+    const lastMessage = messages[messages.length - 1];
+    if (lastMessage && lastMessage.role === "user") {
+      appendToLocalStorage(lastMessage);
+    }
+
+    // Load messages from local storage
+    const savedMessages = JSON.parse(localStorage.getItem("messages") ?? "[]");
+    if (messages.length === 0 && savedMessages.length > 0) {
+      setMessages(savedMessages);
+    }
+  }, [messages.length]);
 
   return (
     <div className="fixed flex flex-col items-end gap-4 z-[100]">
@@ -134,7 +211,9 @@ const Chat = (props) => {
                       }}
                       onClick={() => {
                         localStorage.removeItem("chatId");
+                        localStorage.removeItem("messages");
                         setMessages([]);
+                        setParsedMessages([]);
                       }}
                     >
                       <IconMessage2Plus className="h-5 w-5" />
@@ -160,7 +239,7 @@ const Chat = (props) => {
                   <p>{error.message}</p>
                 </div>
               ) : (
-                messages
+                parsedMessages
                   .filter((message) => !message.toolInvocations)
                   .map((message) => (
                     <div
@@ -197,9 +276,7 @@ const Chat = (props) => {
                               : config.botColorForeground,
                         }}
                       >
-                        {message.content.split("\n").map((line, i) => (
-                          <p key={i}>{line}</p>
-                        ))}
+                        {message.component}
                       </div>
                       {message.role === "user" ? (
                         <Avatar className="h-8 w-8">
@@ -210,7 +287,25 @@ const Chat = (props) => {
                     </div>
                   ))
               )}
-              {isLoading && messages[messages.length - 1].role === "user" ? (
+              {latestMessage && latestMessage.role === "assistant" ? (
+                <div className="flex items-start gap-3">
+                  <Avatar className="h-8 w-8">
+                    <AvatarImage src={config.botIcon} />
+                    <AvatarFallback>{config.assistantInitials}</AvatarFallback>
+                  </Avatar>
+                  <div
+                    className="rounded-xl rounded-tl-sm p-3 text-sm break-words max-w-[70%]"
+                    style={{
+                      wordBreak: "break-word",
+                      backgroundColor: config.botColor,
+                      color: config.botColorForeground,
+                    }}
+                  >
+                    {latestMessage.content}
+                  </div>
+                </div>
+              ) : null}
+              {isLoading && messages[messages.length - 1]?.role === "user" ? (
                 <div className="flex items-start gap-3">
                   <Avatar className="h-8 w-8">
                     <AvatarImage src={config.botIcon} />
