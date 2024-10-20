@@ -137,6 +137,14 @@ const Chat = (props) => {
     ]);
   }
 
+  function scrollToBottom() {
+    chatContainerRef.current.scrollIntoView({
+      behavior: "smooth",
+      block: "end",
+      inline: "nearest",
+    });
+  }
+
   React.useEffect(() => {
     if (!messages || messages.length === 0) return;
     // Iterate through all messages
@@ -165,16 +173,21 @@ const Chat = (props) => {
     };
 
     handleMessages();
+  }, [messages, isLoading]);
 
+  React.useEffect(() => {
     // Scroll to bottom when assistant is typing
     if (chatContainerRef.current && isLoading) {
-      chatContainerRef.current.scrollIntoView({
-        behavior: "smooth",
-        block: "end",
-        inline: "nearest",
-      });
+      scrollToBottom();
     }
-  }, [messages, isLoading]);
+  }, [isLoading, messages, parsedMessages, latestMessage]);
+
+  React.useEffect(() => {
+    // Scroll to bottom when chat is opened
+    if (open) {
+      scrollToBottom();
+    }
+  }, [open]);
 
   React.useEffect(() => {
     // Create chatId if not exists
@@ -195,6 +208,64 @@ const Chat = (props) => {
       setMessages(savedMessages);
     }
   }, [messages.length]);
+
+  const UserMessage = ({ message }) => (
+    <div className="flex gap-3 justify-end">
+      <div
+        className="rounded-xl bg-muted p-3 text-sm break-words max-w-[70%] rounded-tr-sm"
+        style={{
+          wordBreak: "break-word",
+          background: `linear-gradient(to right, ${config.primaryColor}, ${lighterPrimaryColor})`,
+          color: config.userColorForeground,
+        }}
+      >
+        {message.component}
+      </div>
+      <Avatar className="h-8 w-8">
+        <AvatarImage src={config.userIcon} />
+        <AvatarFallback
+          style={{
+            background: `linear-gradient(to right, ${config.primaryColor}, ${lighterPrimaryColor})`,
+          }}
+        >
+          {config.userInitials}
+        </AvatarFallback>
+      </Avatar>
+    </div>
+  );
+
+  const AssistantAvatar = ({ size }) => (
+    <Avatar className={`size-${size}`}>
+      <AvatarImage src={config.botIcon} />
+      <AvatarFallback
+        style={{
+          backgroundColor: config.botColor,
+          color: config.botColorForeground,
+        }}
+      >
+        {config.assistantInitials}
+      </AvatarFallback>
+    </Avatar>
+  );
+
+  const AssistantMessage = ({ message, pulse }) => (
+    <div className="flex items-start gap-3">
+      <AssistantAvatar size={8} />
+      <span
+        className={cn(
+          "rounded-xl rounded-tl-sm p-3 text-sm break-words max-w-[70%]",
+          pulse && "animate-pulse"
+        )}
+        style={{
+          wordBreak: "break-word",
+          backgroundColor: config.botColor,
+          color: config.botColorForeground,
+        }}
+      >
+        {message.component || message.content}
+      </span>
+    </div>
+  );
 
   return (
     <div className="fixed flex flex-col items-end gap-4 z-[100]">
@@ -242,17 +313,7 @@ const Chat = (props) => {
                 </Button>
               </div>
               <div className="flex gap-2 items-center">
-                <Avatar className="h-10 w-10">
-                  <AvatarImage src={config.botIcon} />
-                  <AvatarFallback
-                    style={{
-                      backgroundColor: config.botColor,
-                      color: config.botColorForeground,
-                    }}
-                  >
-                    {config.assistantInitials}
-                  </AvatarFallback>
-                </Avatar>
+                <AssistantAvatar size={10} />
                 <div className="flex flex-col gap-1 justify-center">
                   <div className="font-medium">{config.title}</div>
                   <div className="flex items-center gap-1 text-xs">
@@ -276,110 +337,20 @@ const Chat = (props) => {
                 parsedMessages
                   .filter((message) => !message.toolInvocations)
                   .map((message) => (
-                    <div
-                      key={message.id}
-                      className={cn(
-                        "flex items-start gap-3",
-                        message.role === "user" ? "justify-end" : ""
-                      )}
-                    >
-                      {message.role === "assistant" ? (
-                        <Avatar className="h-8 w-8">
-                          <AvatarImage src={config.botIcon} />
-                          <AvatarFallback
-                            style={{
-                              backgroundColor: config.botColor,
-                              color: config.botColorForeground,
-                            }}
-                          >
-                            {config.assistantInitials}
-                          </AvatarFallback>
-                        </Avatar>
-                      ) : null}
-                      <div
-                        className={cn(
-                          "rounded-xl bg-muted p-3 text-sm break-words max-w-[70%]",
-                          message.role === "user"
-                            ? "rounded-tr-sm"
-                            : "rounded-tl-sm"
-                        )}
-                        style={{
-                          wordBreak: "break-word",
-                          background:
-                            message.role === "user"
-                              ? `linear-gradient(to right, ${config.primaryColor}, ${lighterPrimaryColor})`
-                              : config.botColor,
-                          color:
-                            message.role === "user"
-                              ? config.userColorForeground
-                              : config.botColorForeground,
-                        }}
-                      >
-                        {message.component}
-                      </div>
+                    <>
                       {message.role === "user" ? (
-                        <Avatar className="h-8 w-8">
-                          <AvatarImage src={config.userIcon} />
-                          <AvatarFallback
-                            style={{
-                              background: `linear-gradient(to right, ${config.primaryColor}, ${lighterPrimaryColor})`,
-                            }}
-                          >
-                            {config.userInitials}
-                          </AvatarFallback>
-                        </Avatar>
-                      ) : null}
-                    </div>
+                        <UserMessage key={message.id} message={message} />
+                      ) : (
+                        <AssistantMessage key={message.id} message={message} />
+                      )}
+                    </>
                   ))
               )}
               {latestMessage && latestMessage.role === "assistant" ? (
-                <div className="flex items-start gap-3">
-                  <Avatar className="h-8 w-8">
-                    <AvatarImage src={config.botIcon} />
-                    <AvatarFallback
-                      style={{
-                        backgroundColor: config.botColor,
-                        color: config.botColorForeground,
-                      }}
-                    >
-                      {config.assistantInitials}
-                    </AvatarFallback>
-                  </Avatar>
-                  <div
-                    className="rounded-xl rounded-tl-sm p-3 text-sm break-words max-w-[70%]"
-                    style={{
-                      wordBreak: "break-word",
-                      backgroundColor: config.botColor,
-                      color: config.botColorForeground,
-                    }}
-                  >
-                    {latestMessage.content}
-                  </div>
-                </div>
+                <AssistantMessage message={latestMessage} />
               ) : null}
-              {isLoading && messages[messages.length - 1]?.role === "user" ? (
-                <div className="flex items-start gap-3">
-                  <Avatar className="h-8 w-8">
-                    <AvatarImage src={config.botIcon} />
-                    <AvatarFallback
-                      style={{
-                        backgroundColor: config.botColor,
-                        color: config.botColorForeground,
-                      }}
-                    >
-                      {config.assistantInitials}
-                    </AvatarFallback>
-                  </Avatar>
-                  <span
-                    className="rounded-xl rounded-tl-sm p-3 text-sm animate-pulse"
-                    style={{
-                      backgroundColor: config.botColor,
-                      color: config.botColorForeground,
-                    }}
-                  >
-                    ...
-                  </span>
-                </div>
+              {isLoading && latestMessage === null ? (
+                <AssistantMessage message={{ content: "..." }} pulse />
               ) : null}
             </CardContent>
           </ScrollArea>
@@ -395,34 +366,23 @@ const Chat = (props) => {
                 onChange={handleInputChange}
                 className="h-16 min-h-0 w-full resize-none rounded-xl px-4 pr-16 shadow-sm scroll bg-gray-100 border-gray-300 text-black"
               />
-              {isLoading ? (
-                <Button
-                  type="button"
-                  size="icon"
-                  className="absolute top-1/2 right-3 -translate-y-1/2"
-                  onClick={stop}
-                  style={{
-                    backgroundColor: config.primaryColor,
-                    color: config.primaryColorForeground,
-                  }}
-                >
+              <Button
+                type={isLoading ? "button" : "submit"}
+                size="icon"
+                className="absolute top-1/2 right-3 -translate-y-1/2"
+                onClick={isLoading ? stop : () => {}}
+                style={{
+                  background: `linear-gradient(to right, ${config.primaryColor}, ${lighterPrimaryColor})`,
+                  color: config.primaryColorForeground,
+                }}
+              >
+                {isLoading ? (
                   <IconPlayerStopFilled className="h-4 w-4" />
-                  <span className="sr-only">Stop</span>
-                </Button>
-              ) : (
-                <Button
-                  type="submit"
-                  size="icon"
-                  className="absolute top-1/2 right-3 -translate-y-1/2"
-                  style={{
-                    background: `linear-gradient(to right, ${config.primaryColor}, ${lighterPrimaryColor})`,
-                    color: config.primaryColorForeground,
-                  }}
-                >
+                ) : (
                   <IconSend className="h-4 w-4" />
-                  <span className="sr-only">Send</span>
-                </Button>
-              )}
+                )}
+                <span className="sr-only">{isLoading ? "Stop" : "Send"}</span>
+              </Button>
             </form>
             <div className="flex items-center gap-2 text-sm text-black">
               <p>Powered by</p>
@@ -434,7 +394,7 @@ const Chat = (props) => {
               >
                 <img
                   src="https://cdn.askth.ing/icon.png"
-                  alt="askthing"
+                  alt="AskThing"
                   width={20}
                   height={20}
                 />
