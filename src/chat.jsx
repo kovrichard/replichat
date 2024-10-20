@@ -198,11 +198,11 @@ const Chat = (props) => {
 
   return (
     <div className="fixed flex flex-col items-end gap-4 z-[100]">
-      {!open ? (
+      {open ? (
         <Card
           className={cn(
             "fixed flex flex-col w-svw h-svh sm:h-auto sm:w-96 right-0 bottom-0 bg-transparent sm:right-8 sm:bottom-28 rounded-none sm:rounded-2xl shadow-lg z-[110]",
-            !open ? "slide-in" : "slide-out"
+            open ? "slide-in" : "slide-out"
           )}
         >
           <CardHeader
