@@ -263,7 +263,10 @@ const Chat = (props) => {
               </div>
             </div>
           </CardHeader>
-          <ScrollArea className="flex-1 sm:flex-none sm:h-[calc(100svh-24rem)] hxl:h-[400px] bg-white">
+          <ScrollArea
+            className="flex-1 sm:flex-none sm:h-[calc(100svh-24rem)] hxl:h-[400px] bg-white"
+            thumbStyle={{ backgroundColor: "#e5e5e5" }}
+          >
             <CardContent className="p-4 grid gap-4" ref={chatContainerRef}>
               {error ? (
                 <div className="w-full p-4 text-center border border-destructive text-destructive rounded-md">
