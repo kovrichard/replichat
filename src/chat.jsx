@@ -236,7 +236,10 @@ const Chat = (props) => {
   );
 
   const AssistantAvatar = ({ size }) => (
-    <Avatar className={`size-${size}`}>
+    <Avatar style={{
+      width: `${size}rem`,
+      height: `${size}rem`,
+    }}>
       <AvatarImage src={config.botIcon} />
       <AvatarFallback
         style={{
@@ -251,7 +254,7 @@ const Chat = (props) => {
 
   const AssistantMessage = ({ message, pulse }) => (
     <div className="flex items-start gap-3">
-      <AssistantAvatar size={8} />
+      <AssistantAvatar size={2} />
       <span
         className={cn(
           "rounded-xl rounded-tl-sm p-3 text-sm break-words max-w-[70%]",
@@ -314,7 +317,7 @@ const Chat = (props) => {
                 </Button>
               </div>
               <div className="flex gap-2 items-center">
-                <AssistantAvatar size={10} />
+                <AssistantAvatar size={2.5} />
                 <div className="flex flex-col gap-1 justify-center">
                   <div className="font-medium">{config.title}</div>
                   <div className="flex items-center gap-1 text-xs">
