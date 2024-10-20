@@ -33,7 +33,7 @@ const Chat = (props) => {
   const config = {
     title: "AI Assistant",
     userInitials: "US",
-    assistantInitials: "AI",
+    botInitials: "AI",
     primaryColor: "#143aa2",
     primaryColorForeground: "#FFFFFF",
     botColor: "#e5e5e5",
@@ -247,7 +247,7 @@ const Chat = (props) => {
           color: config.botColorForeground,
         }}
       >
-        {config.assistantInitials}
+        {config.botInitials}
       </AvatarFallback>
     </Avatar>
   );
