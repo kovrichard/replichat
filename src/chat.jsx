@@ -44,6 +44,7 @@ const Chat = (props) => {
   };
 
   const chatContainerRef = React.useRef(null);
+  const footerRef = React.useRef(null);
   const [open, setOpen] = React.useState(false);
   const [parsedMessages, setParsedMessages] = React.useState([]);
   const [latestMessage, setLatestMessage] = React.useState(null);
@@ -137,8 +138,8 @@ const Chat = (props) => {
     ]);
   }
 
-  function scrollToBottom() {
-    chatContainerRef.current.scrollIntoView({
+  function scrollToBottom(ref) {
+    ref.current.scrollIntoView({
       behavior: "smooth",
       block: "end",
       inline: "nearest",
@@ -178,14 +179,14 @@ const Chat = (props) => {
   React.useEffect(() => {
     // Scroll to bottom when assistant is typing
     if (chatContainerRef.current && isLoading) {
-      scrollToBottom();
+      scrollToBottom(chatContainerRef);
     }
   }, [isLoading, messages, parsedMessages, latestMessage]);
 
   React.useEffect(() => {
     // Scroll to bottom when chat is opened
     if (open) {
-      scrollToBottom();
+      scrollToBottom(chatContainerRef);
     }
   }, [open]);
 
@@ -354,7 +355,10 @@ const Chat = (props) => {
               ) : null}
             </CardContent>
           </ScrollArea>
-          <CardFooter className="flex flex-col p-4 gap-2 sm:rounded-b-2xl border-t border-t-gray-100 bg-white">
+          <CardFooter
+            ref={footerRef}
+            className="flex flex-col p-4 gap-2 sm:rounded-b-2xl border-t border-t-gray-100 bg-white"
+          >
             <form
               className="relative w-full"
               onSubmit={customSubmit}
@@ -364,6 +368,7 @@ const Chat = (props) => {
                 placeholder="Type your message..."
                 value={input}
                 onChange={handleInputChange}
+                onFocus={() => scrollToBottom(footerRef)}
                 className="h-16 min-h-0 w-full resize-none rounded-xl px-4 pr-16 shadow-sm scroll bg-gray-100 border-gray-300 text-black"
               />
               <Button
