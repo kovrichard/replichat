@@ -69,16 +69,22 @@ const Chat = (props) => {
   });
 
   const lighterPrimaryColor = lightenColor(config.primaryColor, 20);
+  const initialMessageExists =
+    config.initialMessages.length > 0 &&
+    config.initialMessages[0].content !== "";
+  const storagePrefix = "askthing-DTUlLMYs4kab8AUFSGeF5ln3";
 
   function appendToLocalStorage(message) {
-    const savedMessages = JSON.parse(localStorage.getItem("messages") ?? "[]");
+    const savedMessages = JSON.parse(
+      localStorage.getItem(`${storagePrefix}-messages`) ?? "[]"
+    );
 
     if (message.id === savedMessages[savedMessages.length - 1]?.id) {
       return;
     }
 
     localStorage.setItem(
-      "messages",
+      `${storagePrefix}-messages`,
       JSON.stringify([...savedMessages, message])
     );
   }
@@ -91,7 +97,7 @@ const Chat = (props) => {
     handleSubmit(e, {
       body: {
         apiKey: config.apiKey,
-        conversationId: localStorage.getItem("chatId"),
+        conversationId: localStorage.getItem(`${storagePrefix}-chat-id`),
       },
     });
   }
@@ -149,6 +155,11 @@ const Chat = (props) => {
     });
   }
 
+  function toggleOpen() {
+    sessionStorage.setItem(`${storagePrefix}-hide-popup`, "true");
+    setOpen(!open);
+  }
+
   React.useEffect(() => {
     if (!messages || messages.length === 0) return;
     // Iterate through all messages
@@ -181,7 +192,8 @@ const Chat = (props) => {
 
   React.useEffect(() => {
     // Show message badge after 3 seconds if conversation is empty, chat is closed, and there is a welcome message
-    if (!open && messages.length === 1 && config.initialMessages.length > 0) {
+    const hidePopup = sessionStorage.getItem(`${storagePrefix}-hide-popup`);
+    if (!open && messages.length === 1 && initialMessageExists && !hidePopup) {
       setTimeout(() => {
         setShowMessageBadge(true);
       }, 3000);
@@ -205,10 +217,10 @@ const Chat = (props) => {
   }, [open]);
 
   React.useEffect(() => {
-    // Create chatId if not exists
-    if (localStorage.getItem("chatId") === null) {
+    // Create chat-id if not exists
+    if (localStorage.getItem(`${storagePrefix}-chat-id`) === null) {
       const id = createId();
-      localStorage.setItem("chatId", id);
+      localStorage.setItem(`${storagePrefix}-chat-id`, id);
     }
 
     // Append user message to local storage
@@ -218,7 +230,7 @@ const Chat = (props) => {
     }
 
     // Load messages from local storage
-    const savedMessages = localStorage.getItem("messages");
+    const savedMessages = localStorage.getItem(`${storagePrefix}-messages`);
     const parsedMessages = savedMessages
       ? JSON.parse(savedMessages)
       : config.initialMessages;
@@ -315,8 +327,8 @@ const Chat = (props) => {
                         className="inline-flex items-center justify-center size-8 p-2 hover:bg-transparent"
                         variant="ghost"
                         onClick={() => {
-                          localStorage.removeItem("chatId");
-                          localStorage.removeItem("messages");
+                          localStorage.removeItem(`${storagePrefix}-chat-id`);
+                          localStorage.removeItem(`${storagePrefix}-messages`);
                           setMessages([]);
                           setParsedMessages([]);
                         }}
@@ -429,6 +441,16 @@ const Chat = (props) => {
           </CardFooter>
         </Card>
       ) : null}
+      {showMessageBadge && initialMessageExists ? (
+        <div
+          className="fixed right-4 bottom-24 sm:right-8 sm:bottom-28 inline-flex items-center justify-center text-sm text-pretty max-w-64 p-4 rounded-2xl rounded-br-md text-white slide-in opacity-0"
+          style={{
+            background: `linear-gradient(to right, ${config.primaryColor}, ${lighterPrimaryColor})`,
+          }}
+        >
+          {config.initialMessages[0].content}
+        </div>
+      ) : null}
       <Button
         className="fixed w-16 h-16 rounded-full border-none text-text p-3 right-4 bottom-4 sm:right-8 sm:bottom-8 shadow-sm"
         style={{
@@ -436,15 +458,15 @@ const Chat = (props) => {
           color: config.primaryColorForeground,
         }}
         variant="outline"
-        onClick={() => setOpen(!open)}
+        onClick={toggleOpen}
       >
         {open ? (
           <IconX size="50" />
         ) : (
           <IconMessageDots size="50" className="rotate-6" />
         )}
-        {showMessageBadge ? (
-          <Badge className="absolute inline-flex items-center justify-center top-0 right-0 -mt-2 -mr-2 size-6 bg-[#D54B10] text-white">
+        {showMessageBadge && initialMessageExists ? (
+          <Badge className="absolute inline-flex items-center justify-center top-0 right-0 -mt-2 -mr-2 size-6 bg-[#D54B10] text-white hover:bg-[#D54B10]">
             1
           </Badge>
         ) : null}
