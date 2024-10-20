@@ -34,14 +34,12 @@ const Chat = (props) => {
     title: "AI Assistant",
     userInitials: "US",
     assistantInitials: "AI",
-    primaryColor: "#2d3250",
-    userColor: "#F9b17a",
-    botColor: "#6f9ceb",
+    primaryColor: "#143aa2",
     primaryColorForeground: "#FFFFFF",
-    userColorForeground: "#000000",
+    botColor: "#e5e5e5",
     botColorForeground: "#000000",
-    //userIcon: "https://chat.richardkovacs.dev/profile.svg",
-    //botIcon: "https://chat.richardkovacs.dev/richard-kovacs.webp",
+    // userIcon: "https://cdn.askth.ing/user.png",
+    // botIcon: "https://cdn.askth.ing/robot-face.png",
     ...props.config,
   };
 
@@ -65,6 +63,8 @@ const Chat = (props) => {
       appendToLocalStorage(message);
     },
   });
+
+  const lighterPrimaryColor = lightenColor(config.primaryColor, 20);
 
   function appendToLocalStorage(message) {
     const savedMessages = JSON.parse(localStorage.getItem("messages") ?? "[]");
@@ -97,6 +97,25 @@ const Chat = (props) => {
       customSubmit(e);
     }
   };
+
+  function lightenColor(color, percent) {
+    const num = parseInt(color.replace("#", ""), 16),
+      amt = Math.round(2.55 * percent),
+      R = (num >> 16) + amt,
+      B = ((num >> 8) & 0x00ff) + amt,
+      G = (num & 0x0000ff) + amt;
+
+    const newColor = (
+      0x1000000 +
+      (R < 255 ? (R < 1 ? 0 : R) : 255) * 0x10000 +
+      (B < 255 ? (B < 1 ? 0 : B) : 255) * 0x100 +
+      (G < 255 ? (G < 1 ? 0 : G) : 255)
+    )
+      .toString(16)
+      .slice(1);
+
+    return `#${newColor}`;
+  }
 
   async function mdxToHtml(mdxString) {
     const { default: Content } = await evaluate(mdxString, {
@@ -179,63 +198,72 @@ const Chat = (props) => {
 
   return (
     <div className="fixed flex flex-col items-end gap-4 z-[100]">
-      {open ? (
+      {!open ? (
         <Card
           className={cn(
-            "fixed flex flex-col w-svw h-svh sm:h-auto sm:w-96 right-0 bottom-0 sm:right-8 sm:bottom-28 rounded-none sm:rounded-2xl shadow-lg bg-[#6f9ceb] transition-transform duration-300 z-[110]",
-            open ? "slide-in" : "slide-out"
+            "fixed flex flex-col w-svw h-svh sm:h-auto sm:w-96 right-0 bottom-0 bg-transparent sm:right-8 sm:bottom-28 rounded-none sm:rounded-2xl shadow-lg z-[110]",
+            !open ? "slide-in" : "slide-out"
           )}
         >
-          <CardHeader className="relative justify-center flex-row gap-2 p-4">
-            <div className="flex flex-col items-center gap-2">
-              <div className="relative">
-                <div className="absolute z-10 -right-[2px] -top-[2px]">
-                  <span className="relative flex h-3 w-3">
-                    <span className="relative inline-flex rounded-full h-3 w-3 bg-green-500"></span>
-                  </span>
-                </div>
+          <CardHeader
+            className="relative flex-row gap-2 p-4 sm:rounded-t-2xl"
+            style={{
+              background: `linear-gradient(to right, ${config.primaryColor}, ${lighterPrimaryColor})`,
+              color: config.primaryColorForeground,
+            }}
+          >
+            <div className="flex flex-col flex-1 justify-between">
+              <div className="flex gap-1 justify-end">
+                <TooltipProvider>
+                  <Tooltip delayDuration={100}>
+                    <TooltipTrigger asChild>
+                      <Button
+                        className="inline-flex items-center justify-center size-8 p-2 hover:bg-transparent"
+                        variant="ghost"
+                        onClick={() => {
+                          localStorage.removeItem("chatId");
+                          localStorage.removeItem("messages");
+                          setMessages([]);
+                          setParsedMessages([]);
+                        }}
+                      >
+                        <IconMessage2Plus size={18} />
+                      </Button>
+                    </TooltipTrigger>
+                    <TooltipContent>New conversation</TooltipContent>
+                  </Tooltip>
+                </TooltipProvider>
+                <Button
+                  className="inline-flex items-center justify-center size-8 p-2 hover:bg-transparent"
+                  variant="ghost"
+                  onClick={() => setOpen(false)}
+                >
+                  <IconX size={18} />
+                </Button>
+              </div>
+              <div className="flex gap-2 items-center">
                 <Avatar className="h-10 w-10">
                   <AvatarImage src={config.botIcon} />
-                  <AvatarFallback>{config.assistantInitials}</AvatarFallback>
-                </Avatar>
-              </div>
-              <div className="font-medium text-black">{config.title}</div>
-              <TooltipProvider>
-                <Tooltip delayDuration={100}>
-                  <TooltipTrigger
-                    className="absolute right-3 bottom-3 bg-[#7a82f9]"
-                    asChild
+                  <AvatarFallback
+                    style={{
+                      backgroundColor: config.botColor,
+                      color: config.botColorForeground,
+                    }}
                   >
-                    <Button
-                      size="icon"
-                      style={{
-                        backgroundColor: config.primaryColor,
-                        color: config.primaryColorForeground,
-                      }}
-                      onClick={() => {
-                        localStorage.removeItem("chatId");
-                        localStorage.removeItem("messages");
-                        setMessages([]);
-                        setParsedMessages([]);
-                      }}
-                    >
-                      <IconMessage2Plus className="h-5 w-5" />
-                    </Button>
-                  </TooltipTrigger>
-                  <TooltipContent>New conversation</TooltipContent>
-                </Tooltip>
-              </TooltipProvider>
-              <Button
-                size="icon"
-                variant="ghost"
-                onClick={() => setOpen(false)}
-                className="absolute right-3 top-1 sm:hidden"
-              >
-                <IconX className="h-5 w-5" />
-              </Button>
+                    {config.assistantInitials}
+                  </AvatarFallback>
+                </Avatar>
+                <div className="flex flex-col gap-1 justify-center">
+                  <div className="font-medium">{config.title}</div>
+                  <div className="flex items-center gap-1 text-xs">
+                    <span className="relative inline-flex rounded-full h-3 w-3 bg-green-500"></span>
+                    <span className="opacity-70">Online</span>
+                  </div>
+                </div>
+              </div>
             </div>
           </CardHeader>
-          <ScrollArea className="flex-1 sm:flex-none sm:h-[calc(100svh-24rem)] hxl:h-[400px] bg-[#2d3250]">
+          <ScrollArea className="flex-1 sm:flex-none sm:h-[calc(100svh-24rem)] hxl:h-[400px] bg-white">
             <CardContent className="p-4 grid gap-4" ref={chatContainerRef}>
               {error ? (
                 <div className="w-full p-4 text-center border border-destructive text-destructive rounded-md">
@@ -255,7 +283,12 @@ const Chat = (props) => {
                       {message.role === "assistant" ? (
                         <Avatar className="h-8 w-8">
                           <AvatarImage src={config.botIcon} />
-                          <AvatarFallback>
+                          <AvatarFallback
+                            style={{
+                              backgroundColor: config.botColor,
+                              color: config.botColorForeground,
+                            }}
+                          >
                             {config.assistantInitials}
                           </AvatarFallback>
                         </Avatar>
@@ -269,9 +302,9 @@ const Chat = (props) => {
                         )}
                         style={{
                           wordBreak: "break-word",
-                          backgroundColor:
+                          background:
                             message.role === "user"
-                              ? config.userColor
+                              ? `linear-gradient(to right, ${config.primaryColor}, ${lighterPrimaryColor})`
                               : config.botColor,
                           color:
                             message.role === "user"
@@ -284,7 +317,13 @@ const Chat = (props) => {
                       {message.role === "user" ? (
                         <Avatar className="h-8 w-8">
                           <AvatarImage src={config.userIcon} />
-                          <AvatarFallback>{config.userInitials}</AvatarFallback>
+                          <AvatarFallback
+                            style={{
+                              background: `linear-gradient(to right, ${config.primaryColor}, ${lighterPrimaryColor})`,
+                            }}
+                          >
+                            {config.userInitials}
+                          </AvatarFallback>
                         </Avatar>
                       ) : null}
                     </div>
@@ -294,7 +333,14 @@ const Chat = (props) => {
                 <div className="flex items-start gap-3">
                   <Avatar className="h-8 w-8">
                     <AvatarImage src={config.botIcon} />
-                    <AvatarFallback>{config.assistantInitials}</AvatarFallback>
+                    <AvatarFallback
+                      style={{
+                        backgroundColor: config.botColor,
+                        color: config.botColorForeground,
+                      }}
+                    >
+                      {config.assistantInitials}
+                    </AvatarFallback>
                   </Avatar>
                   <div
                     className="rounded-xl rounded-tl-sm p-3 text-sm break-words max-w-[70%]"
@@ -312,7 +358,14 @@ const Chat = (props) => {
                 <div className="flex items-start gap-3">
                   <Avatar className="h-8 w-8">
                     <AvatarImage src={config.botIcon} />
-                    <AvatarFallback>{config.assistantInitials}</AvatarFallback>
+                    <AvatarFallback
+                      style={{
+                        backgroundColor: config.botColor,
+                        color: config.botColorForeground,
+                      }}
+                    >
+                      {config.assistantInitials}
+                    </AvatarFallback>
                   </Avatar>
                   <span
                     className="rounded-xl rounded-tl-sm p-3 text-sm animate-pulse"
@@ -327,7 +380,7 @@ const Chat = (props) => {
               ) : null}
             </CardContent>
           </ScrollArea>
-          <CardFooter className="flex flex-col p-4 gap-2 bg-[#2d3250] sm:rounded-b-2xl border-t">
+          <CardFooter className="flex flex-col p-4 gap-2 sm:rounded-b-2xl border-t border-t-gray-100 bg-white">
             <form
               className="relative w-full"
               onSubmit={customSubmit}
@@ -337,7 +390,7 @@ const Chat = (props) => {
                 placeholder="Type your message..."
                 value={input}
                 onChange={handleInputChange}
-                className="h-16 min-h-0 w-full resize-none rounded-xl px-4 pr-16 shadow-sm scroll bg-[#161e31]"
+                className="h-16 min-h-0 w-full resize-none rounded-xl px-4 pr-16 shadow-sm scroll bg-gray-100 border-gray-300 text-black"
               />
               {isLoading ? (
                 <Button
@@ -359,7 +412,7 @@ const Chat = (props) => {
                   size="icon"
                   className="absolute top-1/2 right-3 -translate-y-1/2"
                   style={{
-                    backgroundColor: config.primaryColor,
+                    background: `linear-gradient(to right, ${config.primaryColor}, ${lighterPrimaryColor})`,
                     color: config.primaryColorForeground,
                   }}
                 >
@@ -368,7 +421,7 @@ const Chat = (props) => {
                 </Button>
               )}
             </form>
-            <div className="flex items-center gap-2 text-sm text-white">
+            <div className="flex items-center gap-2 text-sm text-black">
               <p>Powered by</p>
               <a
                 href="https://askth.ing"
@@ -389,7 +442,11 @@ const Chat = (props) => {
         </Card>
       ) : null}
       <Button
-        className="fixed w-16 h-16 rounded-full border-none text-text p-3 right-4 bottom-4 sm:right-8 sm:bottom-8 shadow-sm bg-[#6f9ceb] hover:bg-[rgba(111,156,235,0.8)]"
+        className="fixed w-16 h-16 rounded-full border-none text-text p-3 right-4 bottom-4 sm:right-8 sm:bottom-8 shadow-sm"
+        style={{
+          background: `linear-gradient(to right, ${config.primaryColor}, ${lighterPrimaryColor})`,
+          color: config.primaryColorForeground,
+        }}
         variant="outline"
         onClick={() => setOpen(!open)}
       >
