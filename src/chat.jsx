@@ -181,19 +181,14 @@ const Chat = (props) => {
 
   React.useEffect(() => {
     // Show message badge after 3 seconds if conversation is empty, chat is closed, and there is a welcome message
-    if (
-      !open &&
-      messages.length === 1 &&
-      config.initialMessages.length > 0 &&
-      !showMessageBadge
-    ) {
+    if (!open && messages.length === 1 && config.initialMessages.length > 0) {
       setTimeout(() => {
         setShowMessageBadge(true);
       }, 3000);
     } else {
       setShowMessageBadge(false);
     }
-  }, [messages, open]);
+  }, [messages, open, config.initialMessages]);
 
   React.useEffect(() => {
     // Scroll to bottom when assistant is typing
@@ -364,15 +359,13 @@ const Chat = (props) => {
               ) : (
                 parsedMessages
                   .filter((message) => !message.toolInvocations)
-                  .map((message) => (
-                    <>
-                      {message.role === "user" ? (
-                        <UserMessage key={message.id} message={message} />
-                      ) : (
-                        <AssistantMessage key={message.id} message={message} />
-                      )}
-                    </>
-                  ))
+                  .map((message) =>
+                    message.role === "user" ? (
+                      <UserMessage key={message.id} message={message} />
+                    ) : (
+                      <AssistantMessage key={message.id} message={message} />
+                    )
+                  )
               )}
               {latestMessage && latestMessage.role === "assistant" ? (
                 <AssistantMessage message={latestMessage} />
