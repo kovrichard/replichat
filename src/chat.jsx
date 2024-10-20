@@ -51,6 +51,12 @@ const Chat = (props) => {
   const [parsedMessages, setParsedMessages] = React.useState([]);
   const [latestMessage, setLatestMessage] = React.useState(null);
   const [showMessageBadge, setShowMessageBadge] = React.useState(false);
+  const lighterPrimaryColor = lightenColor(config.primaryColor, 20);
+  const initialMessageExists =
+    config.initialMessages.length > 0 &&
+    config.initialMessages[0].content !== "";
+  const storagePrefix = "askthing-DTUlLMYs4kab8AUFSGeF5ln3";
+
   const {
     messages,
     setMessages,
@@ -67,12 +73,6 @@ const Chat = (props) => {
       appendToLocalStorage(message);
     },
   });
-
-  const lighterPrimaryColor = lightenColor(config.primaryColor, 20);
-  const initialMessageExists =
-    config.initialMessages.length > 0 &&
-    config.initialMessages[0].content !== "";
-  const storagePrefix = "askthing-DTUlLMYs4kab8AUFSGeF5ln3";
 
   function appendToLocalStorage(message) {
     const savedMessages = JSON.parse(
@@ -191,9 +191,11 @@ const Chat = (props) => {
   }, [messages, isLoading]);
 
   React.useEffect(() => {
-    // Show message badge after 3 seconds if conversation is empty, chat is closed, and there is a welcome message
-    const hidePopup = sessionStorage.getItem(`${storagePrefix}-hide-popup`);
-    if (!open && messages.length === 1 && initialMessageExists && !hidePopup) {
+    const showPopup =
+      sessionStorage.getItem(`${storagePrefix}-hide-popup`) === null;
+    const onlyInitialMessage = messages.length === 1 && initialMessageExists;
+
+    if (!open && onlyInitialMessage && showPopup) {
       setTimeout(() => {
         setShowMessageBadge(true);
       }, 3000);
@@ -249,7 +251,7 @@ const Chat = (props) => {
     if (messages.length === 0 && parsedMessages.length > 0) {
       setMessages(parsedMessages);
     }
-  }, [messages.length]);
+  }, [messages.length, config.initialMessages]);
 
   const UserMessage = ({ message }) => (
     <div className="flex gap-3 justify-end">
@@ -419,7 +421,13 @@ const Chat = (props) => {
                 type={isLoading ? "button" : "submit"}
                 size="icon"
                 className="absolute top-1/2 right-3 -translate-y-1/2"
-                onClick={isLoading ? stop : () => {}}
+                onClick={
+                  isLoading
+                    ? stop
+                    : () => {
+                        return;
+                      }
+                }
                 style={{
                   background: `linear-gradient(to right, ${config.primaryColor}, ${lighterPrimaryColor})`,
                   color: config.primaryColorForeground,
