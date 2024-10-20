@@ -217,6 +217,18 @@ const Chat = (props) => {
   }, [open]);
 
   React.useEffect(() => {
+    const noSavedMessages =
+      localStorage.getItem(`${storagePrefix}-messages`) === null;
+
+    if (initialMessageExists && noSavedMessages) {
+      localStorage.setItem(
+        `${storagePrefix}-messages`,
+        JSON.stringify(config.initialMessages)
+      );
+    }
+  }, [config.initialMessages]);
+
+  React.useEffect(() => {
     // Create chat-id if not exists
     if (localStorage.getItem(`${storagePrefix}-chat-id`) === null) {
       const id = createId();
