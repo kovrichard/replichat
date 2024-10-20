@@ -34,12 +34,12 @@ const Chat = (props) => {
     title: "AI Assistant",
     userInitials: "US",
     assistantInitials: "AI",
-    primaryColor: "#000000",
-    userColor: "#F1F5F9",
-    botColor: "#0F172A",
+    primaryColor: "#2d3250",
+    userColor: "#F9b17a",
+    botColor: "#6f9ceb",
     primaryColorForeground: "#FFFFFF",
     userColorForeground: "#000000",
-    botColorForeground: "#FFFFFF",
+    botColorForeground: "#000000",
     //userIcon: "https://chat.richardkovacs.dev/profile.svg",
     //botIcon: "https://chat.richardkovacs.dev/richard-kovacs.webp",
     ...props.config,
@@ -182,11 +182,11 @@ const Chat = (props) => {
       {open ? (
         <Card
           className={cn(
-            "fixed flex flex-col w-svw h-svh sm:h-auto sm:w-96 right-0 bottom-0 sm:right-8 sm:bottom-28 rounded-none sm:rounded-2xl shadow-lg bg-[#FFFFFF] transition-transform duration-300 z-[110]",
+            "fixed flex flex-col w-svw h-svh sm:h-auto sm:w-96 right-0 bottom-0 sm:right-8 sm:bottom-28 rounded-none sm:rounded-2xl shadow-lg bg-[#6f9ceb] transition-transform duration-300 z-[110]",
             open ? "slide-in" : "slide-out"
           )}
         >
-          <CardHeader className="relative justify-center flex-row gap-2 border-b p-4">
+          <CardHeader className="relative justify-center flex-row gap-2 p-4">
             <div className="flex flex-col items-center gap-2">
               <div className="relative">
                 <div className="absolute z-10 -right-[2px] -top-[2px]">
@@ -199,10 +199,13 @@ const Chat = (props) => {
                   <AvatarFallback>{config.assistantInitials}</AvatarFallback>
                 </Avatar>
               </div>
-              <div className="font-medium">{config.title}</div>
+              <div className="font-medium text-black">{config.title}</div>
               <TooltipProvider>
                 <Tooltip delayDuration={100}>
-                  <TooltipTrigger className="absolute right-3 bottom-3" asChild>
+                  <TooltipTrigger
+                    className="absolute right-3 bottom-3 bg-[#7a82f9]"
+                    asChild
+                  >
                     <Button
                       size="icon"
                       style={{
@@ -232,7 +235,7 @@ const Chat = (props) => {
               </Button>
             </div>
           </CardHeader>
-          <ScrollArea className="flex-1 sm:flex-none sm:h-[calc(100svh-24rem)] hxl:h-[400px]">
+          <ScrollArea className="flex-1 sm:flex-none sm:h-[calc(100svh-24rem)] hxl:h-[400px] bg-[#2d3250]">
             <CardContent className="p-4 grid gap-4" ref={chatContainerRef}>
               {error ? (
                 <div className="w-full p-4 text-center border border-destructive text-destructive rounded-md">
@@ -324,7 +327,7 @@ const Chat = (props) => {
               ) : null}
             </CardContent>
           </ScrollArea>
-          <CardFooter className="flex flex-col border-t p-4 gap-2">
+          <CardFooter className="flex flex-col p-4 gap-2 bg-[#2d3250] sm:rounded-b-2xl border-t">
             <form
               className="relative w-full"
               onSubmit={customSubmit}
@@ -334,7 +337,7 @@ const Chat = (props) => {
                 placeholder="Type your message..."
                 value={input}
                 onChange={handleInputChange}
-                className="h-16 min-h-0 w-full resize-none rounded-xl border border-neutral-400 px-4 pr-16 shadow-sm scroll bg-[#FFFFFF]"
+                className="h-16 min-h-0 w-full resize-none rounded-xl px-4 pr-16 shadow-sm scroll bg-[#161e31]"
               />
               {isLoading ? (
                 <Button
@@ -365,13 +368,13 @@ const Chat = (props) => {
                 </Button>
               )}
             </form>
-            <div className="flex items-center gap-2">
+            <div className="flex items-center gap-2 text-sm text-white">
               <p>Powered by</p>
               <a
                 href="https://askth.ing"
                 target="_blank"
                 rel="noreferrer"
-                className="flex items-center gap-1"
+                className="flex items-center gap-2 hover:underline"
               >
                 <img
                   src="https://cdn.askth.ing/icon.png"
@@ -379,15 +382,15 @@ const Chat = (props) => {
                   width={20}
                   height={20}
                 />
-                <p>askthing</p>
+                <p>AskThing</p>
               </a>
             </div>
           </CardFooter>
         </Card>
       ) : null}
       <Button
-        className="fixed w-16 h-16 rounded-full bg-background text-text p-3 right-4 bottom-4 sm:right-8 sm:bottom-8"
-        variant="ghost"
+        className="fixed w-16 h-16 rounded-full border-none text-text p-3 right-4 bottom-4 sm:right-8 sm:bottom-8 shadow-sm bg-[#6f9ceb] hover:bg-[rgba(111,156,235,0.8)]"
+        variant="outline"
         onClick={() => setOpen(!open)}
       >
         {open ? (
