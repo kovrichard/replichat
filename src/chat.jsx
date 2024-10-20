@@ -28,9 +28,11 @@ import { createId } from "@paralleldrive/cuid2";
 import { evaluate } from "@mdx-js/mdx";
 import * as provider from "@mdx-js/react";
 import * as runtime from "react/jsx-runtime";
+import { Badge } from "./components/ui/badge";
 
 const Chat = (props) => {
   const config = {
+    initialMessages: [],
     title: "AI Assistant",
     userInitials: "US",
     botInitials: "AI",
@@ -48,6 +50,7 @@ const Chat = (props) => {
   const [open, setOpen] = React.useState(false);
   const [parsedMessages, setParsedMessages] = React.useState([]);
   const [latestMessage, setLatestMessage] = React.useState(null);
+  const [showMessageBadge, setShowMessageBadge] = React.useState(false);
   const {
     messages,
     setMessages,
@@ -177,6 +180,22 @@ const Chat = (props) => {
   }, [messages, isLoading]);
 
   React.useEffect(() => {
+    // Show message badge after 3 seconds if conversation is empty, chat is closed, and there is a welcome message
+    if (
+      !open &&
+      messages.length === 1 &&
+      config.initialMessages.length > 0 &&
+      !showMessageBadge
+    ) {
+      setTimeout(() => {
+        setShowMessageBadge(true);
+      }, 3000);
+    } else {
+      setShowMessageBadge(false);
+    }
+  }, [messages, open]);
+
+  React.useEffect(() => {
     // Scroll to bottom when assistant is typing
     if (chatContainerRef.current && isLoading) {
       scrollToBottom(chatContainerRef);
@@ -204,9 +223,12 @@ const Chat = (props) => {
     }
 
     // Load messages from local storage
-    const savedMessages = JSON.parse(localStorage.getItem("messages") ?? "[]");
-    if (messages.length === 0 && savedMessages.length > 0) {
-      setMessages(savedMessages);
+    const savedMessages = localStorage.getItem("messages");
+    const parsedMessages = savedMessages
+      ? JSON.parse(savedMessages)
+      : config.initialMessages;
+    if (messages.length === 0 && parsedMessages.length > 0) {
+      setMessages(parsedMessages);
     }
   }, [messages.length]);
 
@@ -236,10 +258,12 @@ const Chat = (props) => {
   );
 
   const AssistantAvatar = ({ size }) => (
-    <Avatar style={{
-      width: `${size}rem`,
-      height: `${size}rem`,
-    }}>
+    <Avatar
+      style={{
+        width: `${size}rem`,
+        height: `${size}rem`,
+      }}
+    >
       <AvatarImage src={config.botIcon} />
       <AvatarFallback
         style={{
@@ -426,6 +450,11 @@ const Chat = (props) => {
         ) : (
           <IconMessageDots size="50" className="rotate-6" />
         )}
+        {showMessageBadge ? (
+          <Badge className="absolute inline-flex items-center justify-center top-0 right-0 -mt-2 -mr-2 size-6 bg-[#D54B10] text-white">
+            1
+          </Badge>
+        ) : null}
       </Button>
     </div>
   );
