@@ -1,4 +1,4 @@
-name: Deploy chat script to S3
+name: Deploy chat script to S3 stage
 
 on:
   push:
@@ -26,8 +26,8 @@ jobs:
           AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
           AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
           AWS_REGION: eu-central-1
-          S3_BUCKET: ${{ secrets.S3_BUCKET }}
+          S3_BUCKET: ${{ secrets.STAGE_S3_BUCKET }}
         run: |
           bun install -g aws-cli
-          aws s3 cp ./dist/chat.js s3://$S3_BUCKET/chat.js
-          aws cloudfront create-invalidation --distribution-id ${{ secrets.CLOUDFRONT_DISTRIBUTION_ID }} --paths "/chat.js"
+          aws s3 cp ./dist/chat.js s3://$STAGE_S3_BUCKET/chat.js
+          aws cloudfront create-invalidation --distribution-id ${{ secrets.STAGE_CLOUDFRONT_DISTRIBUTION_ID }} --paths "/chat.js"
