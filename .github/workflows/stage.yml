@@ -29,5 +29,5 @@ jobs:
           S3_BUCKET: ${{ secrets.STAGE_S3_BUCKET }}
         run: |
           bun install -g aws-cli
-          aws s3 cp ./dist/chat.js s3://$STAGE_S3_BUCKET/chat.js
+          aws s3 cp ./dist/chat.js s3://$S3_BUCKET/chat.js
           aws cloudfront create-invalidation --distribution-id ${{ secrets.STAGE_CLOUDFRONT_DISTRIBUTION_ID }} --paths "/chat.js"
