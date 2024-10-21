@@ -1,27 +1,36 @@
-import React from 'react';
-import Chat from './chat';
-import { createRoot } from 'react-dom/client';
+import React from "react";
+import Chat from "./chat";
+import { createRoot } from "react-dom/client";
 
 export function initializeChatbot() {
-  const chatbotScript = document.querySelector('script[data-askthing-bot]');
+  const config = getConfig();
+  createBotRoot(config);
+}
+
+function getConfig() {
+  const chatbotScript = document.querySelector("script[data-askthing-bot]");
 
   if (!chatbotScript) {
-    console.error('Chatbot script not found');
+    console.error("Chatbot script not found");
     return;
   }
 
   let config = {};
-  const configAttr = chatbotScript.getAttribute('data-askthing-config');
+  const configAttr = chatbotScript.getAttribute("data-askthing-config");
   if (configAttr) {
     try {
       config = JSON.parse(configAttr);
     } catch (e) {
-      console.error('Invalid chatbot configuration:', e);
+      console.error("Invalid chatbot configuration:", e);
     }
   }
 
-  const chatbotContainer = document.createElement('div');
-  chatbotContainer.id = 'askthing-root';
+  return config;
+}
+
+function createBotRoot(config) {
+  const chatbotContainer = document.createElement("div");
+  chatbotContainer.id = "askthing-root";
   document.body.appendChild(chatbotContainer);
 
   const root = createRoot(chatbotContainer);
