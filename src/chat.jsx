@@ -191,13 +191,16 @@ const Chat = (props) => {
   }, [messages, isLoading]);
 
   React.useEffect(() => {
-    const showPopup =
-      sessionStorage.getItem(`${storagePrefix}-hide-popup`) === null;
+    function showPopup() {
+      return sessionStorage.getItem(`${storagePrefix}-hide-popup`) === null;
+    }
     const onlyInitialMessage = messages.length === 1 && initialMessageExists;
 
-    if (!open && onlyInitialMessage && showPopup) {
+    if (!open && onlyInitialMessage && showPopup()) {
       setTimeout(() => {
-        setShowMessageBadge(true);
+        if (showPopup()) {
+          setShowMessageBadge(true);
+        }
       }, 3000);
     } else {
       setShowMessageBadge(false);
@@ -463,7 +466,7 @@ const Chat = (props) => {
       ) : null}
       {showMessageBadge && initialMessageExists ? (
         <div
-          className="fixed right-4 bottom-24 sm:right-8 sm:bottom-28 inline-flex items-center justify-center text-sm text-pretty max-w-64 p-4 rounded-2xl rounded-br-md text-white slide-in opacity-0"
+          className="fixed right-4 bottom-24 sm:right-8 sm:bottom-28 inline-flex items-center justify-center text-sm text-pretty break-all max-w-64 p-4 rounded-2xl rounded-br-md text-white slide-in opacity-0"
           style={{
             background: `linear-gradient(to right, ${config.primaryColor}, ${lighterPrimaryColor})`,
           }}
