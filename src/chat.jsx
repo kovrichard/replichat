@@ -476,7 +476,7 @@ const Chat = (props) => {
         </div>
       ) : null}
       <Button
-        className="fixed w-16 h-16 rounded-full border-none text-text p-3 right-4 bottom-4 sm:right-8 sm:bottom-8 shadow-sm"
+        className="fixed w-16 h-16 rounded-full border-none text-text p-3 right-4 bottom-4 sm:right-8 sm:bottom-8 shadow-sm hover:scale-105 transition-transform duration-200"
         style={{
           background: `linear-gradient(to right, ${config.primaryColor}, ${lighterPrimaryColor})`,
           color: config.primaryColorForeground,
