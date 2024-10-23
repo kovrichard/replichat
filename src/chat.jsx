@@ -466,8 +466,9 @@ const Chat = (props) => {
       ) : null}
       {showMessageBadge && initialMessageExists ? (
         <div
-          className="fixed right-4 bottom-24 sm:right-8 sm:bottom-28 inline-flex items-center justify-center text-sm text-pretty break-all max-w-64 p-4 rounded-2xl rounded-br-md text-white slide-in opacity-0"
+          className="fixed right-4 bottom-24 sm:right-8 sm:bottom-28 inline-flex items-center justify-center text-sm text-pretty break-words max-w-64 p-4 rounded-2xl rounded-br-md text-white slide-in opacity-0"
           style={{
+            wordBreak: "break-word",
             background: `linear-gradient(to right, ${config.primaryColor}, ${lighterPrimaryColor})`,
           }}
         >
