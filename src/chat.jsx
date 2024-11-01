@@ -472,7 +472,20 @@ const Chat = (props) => {
             background: `linear-gradient(to right, ${config.primaryColor}, ${lighterPrimaryColor})`,
           }}
         >
-          {config.initialMessages[0].content}
+          <p>{config.initialMessages[0].content}</p>
+          <Button
+            className="absolute -top-2 -right-2 rounded-full size-5 p-1 border-none hover:scale-105 transition-transform duration-200"
+            style={{
+              backgroundColor: config.primaryColor,
+              color: config.primaryColorForeground,
+            }}
+            variant="outline"
+            onClick={() => {
+              sessionStorage.setItem(`${storagePrefix}-hide-popup`, "true");
+              setShowMessageBadge(false)}
+            }>
+            <IconX size={14} />
+          </Button>
         </div>
       ) : null}
       <Button
