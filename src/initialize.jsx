@@ -4,7 +4,8 @@ import { createRoot } from "react-dom/client";
 
 export async function initializeChatbot() {
   const config = await getConfig();
-  createBotRoot(config);
+  // createBotRoot(config);
+  await createShadowRoot(config);
 }
 
 async function getConfig() {
@@ -43,6 +44,27 @@ function createBotRoot(config) {
   const chatbotContainer = document.createElement("div");
   chatbotContainer.id = "askthing-root";
   document.body.appendChild(chatbotContainer);
+
+  const root = createRoot(chatbotContainer);
+  root.render(<Chat config={config} />);
+}
+
+async function createShadowRoot(config) {
+  const host = document.createElement('div');
+  document.body.appendChild(host);
+
+  const shadowRoot = host.attachShadow({ mode: "open" });
+
+  const chatbotContainer = document.createElement("div");
+  chatbotContainer.id = "askthing-root";
+  shadowRoot.appendChild(chatbotContainer);
+
+  const response = await fetch(`${process.env.CDN_URL}/style.css`);
+  const body = await response.text();
+
+  const style = document.createElement("style");
+  style.textContent = body;
+  shadowRoot.appendChild(style);
 
   const root = createRoot(chatbotContainer);
   root.render(<Chat config={config} />);

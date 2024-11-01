@@ -17,6 +17,9 @@ jobs:
       - run: bun run build
         env:
           BACKEND_URL: ${{ secrets.PROD_BACKEND_URL }}
+          CDN_URL: https://${{ secrets.PROD_S3_BUCKET }}
+      
+      - run: bun run build:css
 
       - name: Deploy to S3
         env:
@@ -27,4 +30,5 @@ jobs:
         run: |
           bun install -g aws-cli
           aws s3 cp ./dist/chat.js s3://$S3_BUCKET/chat.js
+          aws s3 cp ./dist/style.css s3://$S3_BUCKET/style.css
           aws cloudfront create-invalidation --distribution-id ${{ secrets.PROD_CLOUDFRONT_DISTRIBUTION_ID }} --paths "/chat.js"
