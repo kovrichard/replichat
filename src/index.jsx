@@ -1,4 +1,3 @@
-import '@/styles/globals.css';
 import React from 'react';
 import Chat from './chat';
 import { createRoot } from 'react-dom/client';
@@ -6,6 +5,7 @@ import { initializeChatbot } from './initialize';
 import { createId } from '@paralleldrive/cuid2';
 
 if (process.env.NODE_ENV === 'development') {
+    import('@/styles/globals.css');
     const config = {
         title: 'Test Assistant',
         initialMessages: [
