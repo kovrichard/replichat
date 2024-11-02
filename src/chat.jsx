@@ -475,6 +475,7 @@ const Chat = (props) => {
           <p>{config.initialMessages[0].content}</p>
           <Button
             className="absolute -top-2 -right-2 rounded-full size-5 p-1 border-none hover:scale-105 transition-transform duration-200"
+            aria-label="Close"
             style={{
               backgroundColor: config.primaryColor,
               color: config.primaryColorForeground,
