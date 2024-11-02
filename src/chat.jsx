@@ -30,6 +30,69 @@ import * as provider from "@mdx-js/react";
 import * as runtime from "react/jsx-runtime";
 import { Badge } from "./components/ui/badge";
 
+const UserMessage = ({ message, config, lighterPrimaryColor }) => (
+  <div className="flex gap-3 justify-end">
+    <div
+      className="rounded-xl bg-muted p-3 text-sm break-words max-w-[70%] rounded-tr-sm"
+      style={{
+        wordBreak: "break-word",
+        background: `linear-gradient(to right, ${config.primaryColor}, ${lighterPrimaryColor})`,
+        color: config.userColorForeground,
+      }}
+    >
+      {message.component}
+    </div>
+    <Avatar className="h-8 w-8">
+      <AvatarImage src={config.userIcon} />
+      <AvatarFallback
+        style={{
+          background: `linear-gradient(to right, ${config.primaryColor}, ${lighterPrimaryColor})`,
+        }}
+      >
+        {config.userInitials}
+      </AvatarFallback>
+    </Avatar>
+  </div>
+);
+
+const AssistantAvatar = ({ size, config }) => (
+  <Avatar
+    style={{
+      width: `${size}rem`,
+      height: `${size}rem`,
+    }}
+  >
+    <AvatarImage src={config.botIcon} />
+    <AvatarFallback
+      style={{
+        backgroundColor: config.botColor,
+        color: config.botColorForeground,
+      }}
+    >
+      {config.botInitials}
+    </AvatarFallback>
+  </Avatar>
+);
+
+const AssistantMessage = ({ message, pulse, config }) => (
+  <div className="flex items-start gap-3">
+    <AssistantAvatar size={2} config={config} />
+    <span
+      className={cn(
+        "rounded-xl rounded-tl-sm p-3 text-sm break-words max-w-[70%]",
+        pulse && "animate-pulse"
+      )}
+      style={{
+        wordBreak: "break-word",
+        backgroundColor: config.botColor,
+        color: config.botColorForeground,
+      }}
+    >
+      {message.component || message.content}
+    </span>
+  </div>
+);
+
 const Chat = (props) => {
   const config = {
     initialMessages: [],
@@ -256,69 +319,6 @@ const Chat = (props) => {
     }
   }, [messages.length, config.initialMessages]);
 
-  const UserMessage = ({ message }) => (
-    <div className="flex gap-3 justify-end">
-      <div
-        className="rounded-xl bg-muted p-3 text-sm break-words max-w-[70%] rounded-tr-sm"
-        style={{
-          wordBreak: "break-word",
-          background: `linear-gradient(to right, ${config.primaryColor}, ${lighterPrimaryColor})`,
-          color: config.userColorForeground,
-        }}
-      >
-        {message.component}
-      </div>
-      <Avatar className="h-8 w-8">
-        <AvatarImage src={config.userIcon} />
-        <AvatarFallback
-          style={{
-            background: `linear-gradient(to right, ${config.primaryColor}, ${lighterPrimaryColor})`,
-          }}
-        >
-          {config.userInitials}
-        </AvatarFallback>
-      </Avatar>
-    </div>
-  );
-
-  const AssistantAvatar = ({ size }) => (
-    <Avatar
-      style={{
-        width: `${size}rem`,
-        height: `${size}rem`,
-      }}
-    >
-      <AvatarImage src={config.botIcon} />
-      <AvatarFallback
-        style={{
-          backgroundColor: config.botColor,
-          color: config.botColorForeground,
-        }}
-      >
-        {config.botInitials}
-      </AvatarFallback>
-    </Avatar>
-  );
-
-  const AssistantMessage = ({ message, pulse }) => (
-    <div className="flex items-start gap-3">
-      <AssistantAvatar size={2} />
-      <span
-        className={cn(
-          "rounded-xl rounded-tl-sm p-3 text-sm break-words max-w-[70%]",
-          pulse && "animate-pulse"
-        )}
-        style={{
-          wordBreak: "break-word",
-          backgroundColor: config.botColor,
-          color: config.botColorForeground,
-        }}
-      >
-        {message.component || message.content}
-      </span>
-    </div>
-  );
-
   return (
     <div className="fixed flex flex-col items-end gap-4 z-[100]">
       {open && (
@@ -365,7 +365,7 @@ const Chat = (props) => {
                 </Button>
               </div>
               <div className="flex gap-2 items-center">
-                <AssistantAvatar size={2.5} />
+                <AssistantAvatar size={2.5} config={config} />
                 <div className="flex flex-col gap-1 justify-center">
                   <div className="font-medium">{config.title}</div>
                   <div className="flex items-center gap-1 text-xs">
@@ -390,17 +390,17 @@ const Chat = (props) => {
                   .filter((message) => !message.toolInvocations)
                   .map((message) =>
                     message.role === "user" ? (
-                      <UserMessage key={message.id} message={message} />
+                      <UserMessage key={message.id} message={message} config={config} lighterPrimaryColor={lighterPrimaryColor} />
                     ) : (
-                      <AssistantMessage key={message.id} message={message} />
+                      <AssistantMessage key={message.id} message={message} config={config} />
                     )
                   )
               )}
               {latestMessage && latestMessage.role === "assistant" ? (
-                <AssistantMessage message={latestMessage} />
+                <AssistantMessage message={latestMessage} config={config} />
               ) : null}
               {isLoading && latestMessage === null ? (
-                <AssistantMessage message={{ content: "..." }} pulse />
+                <AssistantMessage message={{ content: "..." }} config={config} pulse />
               ) : null}
             </CardContent>
           </ScrollArea>
