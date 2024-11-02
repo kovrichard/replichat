@@ -1,4 +1,3 @@
-import React from 'react';
 import Chat from './chat';
 import { createRoot } from 'react-dom/client';
 import { initializeChatbot } from './initialize';

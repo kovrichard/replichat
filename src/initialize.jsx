@@ -1,8 +1,8 @@
-import React from "react";
+import { lazy } from "react";
 // import Chat from "./chat";
 import { createRoot } from "react-dom/client";
 
-const LazyChat = React.lazy(() => import("./chat"));
+const LazyChat = lazy(() => import("./chat"));
 
 export async function initializeChatbot() {
   const config = await getConfig();
