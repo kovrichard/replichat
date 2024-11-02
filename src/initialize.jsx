@@ -11,7 +11,10 @@ export async function initializeChatbot() {
 }
 
 async function getConfig() {
-  const chatbotScript = document.querySelector("script[data-askthing-bot]");
+  var chatbotScript = document.currentScript || (function() {
+    var scripts = document.getElementsByTagName('script');
+    return scripts[scripts.length - 1];
+  })();
 
   if (!chatbotScript) {
     console.error("AskThing script not found");
@@ -56,17 +59,17 @@ async function createShadowRoot(config) {
   document.body.appendChild(host);
 
   const shadowRoot = host.attachShadow({ mode: "open" });
-
-  const chatbotContainer = document.createElement("div");
-  chatbotContainer.id = "askthing-root";
-  shadowRoot.appendChild(chatbotContainer);
-
+  
   const response = await fetch(`${process.env.CDN_URL}/style.css`);
   const body = await response.text();
 
   const style = document.createElement("style");
   style.textContent = body;
   shadowRoot.appendChild(style);
+  
+  const chatbotContainer = document.createElement("div");
+  chatbotContainer.id = "askthing-root";
+  shadowRoot.appendChild(chatbotContainer);
 
   const root = createRoot(chatbotContainer);
   root.render(<LazyChat config={config} />);
