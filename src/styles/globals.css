@@ -18,12 +18,12 @@
   font-display: swap;
 }
 
-* {
+#askthing-root {
   font-family: "Inter", sans-serif;
 }
 
 @layer base {
-  :root {
+  #askthing-root {
     --background: 222 38% 14%;
     --foreground: 0 0% 100%;
     --card: 231 28% 25%;
@@ -46,7 +46,7 @@
     --radius: 0.5rem;
   }
 
-  .dark {
+  #askthing-root.dark {
     --background: 224 71% 4%;
     --foreground: 213 31% 91%;
 

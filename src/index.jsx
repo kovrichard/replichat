@@ -18,7 +18,7 @@ if (process.env.NODE_ENV === 'development') {
         apiKey: process.env.ASKTHING_API_KEY,
     };
 
-    const domNode = document.getElementById('root');
+    const domNode = document.getElementById('askthing-root');
     const root = createRoot(domNode);
     root.render(<Chat config={config} />);
 } else {

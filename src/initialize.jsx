@@ -44,6 +44,7 @@ async function getConfig() {
 
 function createBotRoot(config) {
   const chatbotContainer = document.createElement("div");
+  chatbotContainer.id = "askthing-root";
   document.body.appendChild(chatbotContainer);
 
   const root = createRoot(chatbotContainer);
@@ -57,6 +58,7 @@ async function createShadowRoot(config) {
   const shadowRoot = host.attachShadow({ mode: "open" });
 
   const chatbotContainer = document.createElement("div");
+  chatbotContainer.id = "askthing-root";
   shadowRoot.appendChild(chatbotContainer);
 
   const response = await fetch(`${process.env.CDN_URL}/style.css`);
