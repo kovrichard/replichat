@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { useChat } from "ai/react";
 import {
   Card,
@@ -108,12 +108,12 @@ const Chat = (props) => {
     ...props.config,
   };
 
-  const chatContainerRef = React.useRef(null);
-  const footerRef = React.useRef(null);
-  const [open, setOpen] = React.useState(false);
-  const [parsedMessages, setParsedMessages] = React.useState([]);
-  const [latestMessage, setLatestMessage] = React.useState(null);
-  const [showMessageBadge, setShowMessageBadge] = React.useState(false);
+  const chatContainerRef = useRef(null);
+  const footerRef = useRef(null);
+  const [open, setOpen] = useState(false);
+  const [parsedMessages, setParsedMessages] = useState([]);
+  const [latestMessage, setLatestMessage] = useState(null);
+  const [showMessageBadge, setShowMessageBadge] = useState(false);
   const lighterPrimaryColor = lightenColor(config.primaryColor, 20);
   const initialMessageExists =
     config.initialMessages.length > 0 &&
@@ -223,7 +223,7 @@ const Chat = (props) => {
     setOpen(!open);
   }
 
-  React.useEffect(() => {
+  useEffect(() => {
     if (!messages || messages.length === 0) return;
     // Iterate through all messages
     const handleMessages = async () => {
@@ -253,7 +253,7 @@ const Chat = (props) => {
     handleMessages();
   }, [messages, isLoading]);
 
-  React.useEffect(() => {
+  useEffect(() => {
     function showPopup() {
       return sessionStorage.getItem(`${storagePrefix}-hide-popup`) === null;
     }
@@ -270,21 +270,21 @@ const Chat = (props) => {
     }
   }, [messages, open, config.initialMessages]);
 
-  React.useEffect(() => {
+  useEffect(() => {
     // Scroll to bottom when assistant is typing
     if (chatContainerRef.current && isLoading) {
       scrollToBottom(chatContainerRef);
     }
   }, [isLoading, messages, parsedMessages, latestMessage]);
 
-  React.useEffect(() => {
+  useEffect(() => {
     // Scroll to bottom when chat is opened
     if (open) {
       scrollToBottom(chatContainerRef);
     }
   }, [open]);
 
-  React.useEffect(() => {
+  useEffect(() => {
     const noSavedMessages =
       localStorage.getItem(`${storagePrefix}-messages`) === null;
 
@@ -296,7 +296,7 @@ const Chat = (props) => {
     }
   }, [config.initialMessages]);
 
-  React.useEffect(() => {
+  useEffect(() => {
     // Create chat-id if not exists
     if (localStorage.getItem(`${storagePrefix}-chat-id`) === null) {
       const id = createId();
@@ -325,7 +325,7 @@ const Chat = (props) => {
         <Card
           className={cn(
             "fixed flex flex-col w-svw h-dvh sm:h-auto sm:w-96 inset-0 sm:inset-auto bg-transparent sm:right-8 sm:bottom-28 rounded-none sm:rounded-2xl shadow-lg z-[110] transition-all duration-300",
-            open ? "slide-in" : "slide-out"
+            open && "slide-in"
           )}
         >
           <CardHeader
