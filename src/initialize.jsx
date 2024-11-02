@@ -1,6 +1,8 @@
 import React from "react";
-import Chat from "./chat";
+// import Chat from "./chat";
 import { createRoot } from "react-dom/client";
+
+const LazyChat = React.lazy(() => import("./chat"));
 
 export async function initializeChatbot() {
   const config = await getConfig();
@@ -46,7 +48,7 @@ function createBotRoot(config) {
   document.body.appendChild(chatbotContainer);
 
   const root = createRoot(chatbotContainer);
-  root.render(<Chat config={config} />);
+  root.render(<LazyChat config={config} />);
 }
 
 async function createShadowRoot(config) {
@@ -67,5 +69,5 @@ async function createShadowRoot(config) {
   shadowRoot.appendChild(style);
 
   const root = createRoot(chatbotContainer);
-  root.render(<Chat config={config} />);
+  root.render(<LazyChat config={config} />);
 }
