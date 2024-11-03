@@ -1,5 +1,4 @@
 import { lazy } from "react";
-// import Chat from "./chat";
 import { createRoot } from "react-dom/client";
 
 const LazyChat = lazy(() => import("./chat"));

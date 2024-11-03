@@ -1,7 +1,9 @@
-import Chat from './chat';
+import { lazy } from 'react';
 import { createRoot } from 'react-dom/client';
 import { initializeChatbot } from './initialize';
 import { createId } from '@paralleldrive/cuid2';
+
+const LazyChat = lazy(() => import("./chat"));
 
 if (import.meta.env.MODE === 'development') {
     import('@/styles/globals.css');
@@ -19,7 +21,7 @@ if (import.meta.env.MODE === 'development') {
 
     const domNode = document.getElementById('askthing-root');
     const root = createRoot(domNode);
-    root.render(<Chat config={config} />);
+    root.render(<LazyChat config={config} />);
 } else {
     if (document.readyState === 'loading') {
         document.addEventListener('DOMContentLoaded', initializeChatbot);
