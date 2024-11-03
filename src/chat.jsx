@@ -1,8 +1,9 @@
-import { useEffect, useState } from "react";
+import { lazy, useEffect, useState, Suspense } from "react";
 import { Button } from "@/components/ui/button";
 import { IconX, IconMessageDots } from "@tabler/icons-react";
 import { Badge } from "./components/ui/badge";
-import ChatWindow from "./chat-window";
+
+const LazyChatWindow = lazy(() => import("./chat-window"));
 
 const Chat = (props) => {
   const config = {
@@ -76,13 +77,15 @@ const Chat = (props) => {
   return (
     <div className="fixed flex flex-col items-end gap-4 z-[100]">
       {open && (
-        <ChatWindow
-          config={config}
-          lighterPrimaryColor={lighterPrimaryColor}
-          storagePrefix={storagePrefix}
-          initialMessageExists={initialMessageExists}
-          setOpen={setOpen}
-        />
+        <Suspense fallback={null}>
+          <LazyChatWindow
+            config={config}
+            lighterPrimaryColor={lighterPrimaryColor}
+            storagePrefix={storagePrefix}
+            initialMessageExists={initialMessageExists}
+            setOpen={setOpen}
+          />
+        </Suspense>
       )}
       {showMessageBadge && initialMessageExists && (
         <div
