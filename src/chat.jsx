@@ -26,7 +26,7 @@ import {
 import { Textarea } from "@/components/ui/textarea";
 import { createId } from "@paralleldrive/cuid2";
 import { evaluate } from "@mdx-js/mdx";
-import * as provider from "@mdx-js/react";
+import { MDXProvider } from "@mdx-js/react";
 import * as runtime from "react/jsx-runtime";
 import { Badge } from "./components/ui/badge";
 
@@ -192,7 +192,7 @@ const Chat = (props) => {
 
   async function mdxToHtml(mdxString) {
     const { default: Content } = await evaluate(mdxString, {
-      ...provider,
+      MDXProvider: MDXProvider,
       ...runtime,
     });
 
