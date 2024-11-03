@@ -10,10 +10,12 @@ export async function initializeChatbot() {
 }
 
 async function getConfig() {
-  var chatbotScript = document.currentScript || (function() {
-    var scripts = document.getElementsByTagName('script');
-    return scripts[scripts.length - 1];
-  })();
+  var chatbotScript =
+    document.currentScript ||
+    (function () {
+      var scripts = document.getElementsByTagName("script");
+      return scripts[scripts.length - 1];
+    })();
 
   if (!chatbotScript) {
     console.error("AskThing script not found");
@@ -44,28 +46,28 @@ async function getConfig() {
   };
 }
 
-function createBotRoot(config) {
-  const chatbotContainer = document.createElement("div");
-  chatbotContainer.id = "askthing-root";
-  document.body.appendChild(chatbotContainer);
+// function createBotRoot(config) {
+//   const chatbotContainer = document.createElement("div");
+//   chatbotContainer.id = "askthing-root";
+//   document.body.appendChild(chatbotContainer);
 
-  const root = createRoot(chatbotContainer);
-  root.render(<LazyChat config={config} />);
-}
+//   const root = createRoot(chatbotContainer);
+//   root.render(<LazyChat config={config} />);
+// }
 
 async function createShadowRoot(config) {
-  const host = document.createElement('div');
+  const host = document.createElement("div");
   document.body.appendChild(host);
 
   const shadowRoot = host.attachShadow({ mode: "open" });
-  
+
   const response = await fetch(`${import.meta.env.VITE_CDN_URL}/style.css`);
   const body = await response.text();
 
   const style = document.createElement("style");
   style.textContent = body;
   shadowRoot.appendChild(style);
-  
+
   const chatbotContainer = document.createElement("div");
   chatbotContainer.id = "askthing-root";
   shadowRoot.appendChild(chatbotContainer);
