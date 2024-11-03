@@ -29,7 +29,7 @@ async function getConfig() {
   }
 
   const response = await fetch(
-    `${process.env.BACKEND_URL}/api/bot/${apiKey}/config`
+    `${import.meta.env.VITE_BACKEND_URL}/api/bot/${apiKey}/config`
   );
 
   if (!response.ok) {
@@ -60,7 +60,7 @@ async function createShadowRoot(config) {
 
   const shadowRoot = host.attachShadow({ mode: "open" });
   
-  const response = await fetch(`${process.env.CDN_URL}/style.css`);
+  const response = await fetch(`${import.meta.env.VITE_CDN_URL}/style.css`);
   const body = await response.text();
 
   const style = document.createElement("style");

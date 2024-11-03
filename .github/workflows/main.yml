@@ -16,8 +16,8 @@ jobs:
       - run: bun install
       - run: bun run build
         env:
-          BACKEND_URL: ${{ secrets.PROD_BACKEND_URL }}
-          CDN_URL: https://${{ secrets.PROD_S3_BUCKET }}
+          VITE_BACKEND_URL: ${{ secrets.PROD_BACKEND_URL }}
+          VITE_CDN_URL: https://${{ secrets.PROD_S3_BUCKET }}
       
       - run: bun run build:css
 

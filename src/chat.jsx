@@ -130,7 +130,7 @@ const Chat = (props) => {
     stop,
     error,
   } = useChat({
-    api: `${process.env.BACKEND_URL}/api/chat`,
+    api: `${import.meta.env.VITE_BACKEND_URL}/api/chat`,
     keepLastMessageOnError: true,
     onFinish(message) {
       appendToLocalStorage(message);

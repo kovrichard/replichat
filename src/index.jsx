@@ -3,7 +3,7 @@ import { createRoot } from 'react-dom/client';
 import { initializeChatbot } from './initialize';
 import { createId } from '@paralleldrive/cuid2';
 
-if (process.env.NODE_ENV === 'development') {
+if (import.meta.env.MODE === 'development') {
     import('@/styles/globals.css');
     const config = {
         title: 'Test Assistant',
@@ -14,7 +14,7 @@ if (process.env.NODE_ENV === 'development') {
                 content: "Hello! How can I help you today?",
             },
         ],
-        apiKey: process.env.ASKTHING_API_KEY,
+        apiKey: import.meta.env.VITE_ASKTHING_API_KEY,
     };
 
     const domNode = document.getElementById('askthing-root');
