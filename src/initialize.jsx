@@ -5,7 +5,6 @@ const LazyChat = lazy(() => import("./chat"));
 
 export async function initializeChatbot() {
   const config = await getConfig();
-  // createBotRoot(config);
   await createShadowRoot(config);
 }
 
@@ -45,15 +44,6 @@ async function getConfig() {
     apiKey,
   };
 }
-
-// function createBotRoot(config) {
-//   const chatbotContainer = document.createElement("div");
-//   chatbotContainer.id = "askthing-root";
-//   document.body.appendChild(chatbotContainer);
-
-//   const root = createRoot(chatbotContainer);
-//   root.render(<LazyChat config={config} />);
-// }
 
 async function createShadowRoot(config) {
   const host = document.createElement("div");
