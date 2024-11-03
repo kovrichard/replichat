@@ -17,6 +17,7 @@ jobs:
       - uses: oven-sh/setup-bun@v2
 
       - run: bun install
+      - run: bun run lint-check
       - run: bun run build
         env:
           VITE_BACKEND_URL: ${{ secrets.STAGE_BACKEND_URL }}
