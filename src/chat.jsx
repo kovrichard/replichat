@@ -25,8 +25,7 @@ const Chat = (props) => {
   const [showMessageBadge, setShowMessageBadge] = useState(false);
   const lighterPrimaryColor = lightenColor(config.primaryColor, 20);
   const initialMessageExists =
-    config.initialMessages.length > 0 &&
-    config.initialMessages[0].content !== "";
+    config.initialMessages.length > 0 && config.initialMessages[0].content !== "";
   const storagePrefix = "askthing-DTUlLMYs4kab8AUFSGeF5ln3";
 
   function lightenColor(color, percent) {
@@ -104,7 +103,8 @@ const Chat = (props) => {
     sessionStorage.setItem(`${storagePrefix}-hide-popup`, "true");
 
     if (!open) {
-      const openCount = parseInt(sessionStorage.getItem(`${storagePrefix}-open-count`)) || 0;
+      const openCount =
+        parseInt(sessionStorage.getItem(`${storagePrefix}-open-count`)) || 0;
       const instantClose = sessionStorage.getItem(`${storagePrefix}-instant-close`);
 
       if (openCount === 0 && instantClose === null && initialMessageExists) {
@@ -135,8 +135,7 @@ const Chat = (props) => {
       ? JSON.parse(savedMessages)
       : config.initialMessages;
 
-    const onlyInitialMessage =
-      parsedMessages.length === 1 && initialMessageExists;
+    const onlyInitialMessage = parsedMessages.length === 1 && initialMessageExists;
 
     if (!open && onlyInitialMessage && showPopup()) {
       setTimeout(() => {
@@ -199,11 +198,7 @@ const Chat = (props) => {
         variant="outline"
         onClick={toggleOpen}
       >
-        {open ? (
-          <IconX size="50" />
-        ) : (
-          <IconMessageDots size="50" className="rotate-6" />
-        )}
+        {open ? <IconX size="50" /> : <IconMessageDots size="50" className="rotate-6" />}
         {showMessageBadge && initialMessageExists && (
           <Badge className="absolute inline-flex items-center justify-center top-0 right-0 -mt-2 -mr-2 size-6 bg-[#D54B10] text-white hover:bg-[#D54B10]">
             1
