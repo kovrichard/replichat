@@ -2,6 +2,7 @@ import { lazy, useEffect, useState, Suspense } from "react";
 import { Button } from "@/components/ui/button";
 import { IconX, IconMessageDots } from "@tabler/icons-react";
 import { Badge } from "./components/ui/badge";
+import { createId } from "@paralleldrive/cuid2";
 
 const LazyChatWindow = lazy(() => import("./chat-window"));
 
@@ -47,18 +48,71 @@ const Chat = (props) => {
     return `#${newColor}`;
   }
 
+  async function saveInstantOpen() {
+    const chatId = localStorage.getItem(`${storagePrefix}-chat-id`);
+
+    const response = await fetch(
+      `${import.meta.env.VITE_BACKEND_URL}/api/chat/${chatId}`,
+      {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          instantOpen: true,
+          openCount: 1,
+        }),
+      }
+    );
+  }
+
+  async function saveInstantClose() {
+    const chatId = localStorage.getItem(`${storagePrefix}-chat-id`);
+
+    const response = await fetch(
+      `${import.meta.env.VITE_BACKEND_URL}/api/chat/${chatId}`,
+      {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          instantClose: true,
+        }),
+      }
+    );
+  }
+
+  async function incrementOpenCount() {
+    const chatId = localStorage.getItem(`${storagePrefix}-chat-id`);
+
+    const response = await fetch(
+      `${import.meta.env.VITE_BACKEND_URL}/api/chat/${chatId}`,
+      {
+        method: "PUT",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          open: true,
+        }),
+      }
+    );
+  }
+
   function toggleOpen() {
     sessionStorage.setItem(`${storagePrefix}-hide-popup`, "true");
 
     if (!open) {
-      // TODO: collect analytics data
       const openCount = parseInt(sessionStorage.getItem(`${storagePrefix}-open-count`)) || 0;
       const instantClose = sessionStorage.getItem(`${storagePrefix}-instant-close`);
 
       if (openCount === 0 && instantClose === null && initialMessageExists) {
         sessionStorage.setItem(`${storagePrefix}-instant-open`, "true");
+        saveInstantOpen();
+      } else {
+        incrementOpenCount();
       }
-
       sessionStorage.setItem(`${storagePrefix}-open-count`, openCount + 1);
     }
 
@@ -66,6 +120,12 @@ const Chat = (props) => {
   }
 
   useEffect(() => {
+    // Create chat-id if not exists
+    if (localStorage.getItem(`${storagePrefix}-chat-id`) === null) {
+      const id = createId();
+      localStorage.setItem(`${storagePrefix}-chat-id`, id);
+    }
+
     function showPopup() {
       return sessionStorage.getItem(`${storagePrefix}-hide-popup`) === null;
     }
@@ -121,8 +181,8 @@ const Chat = (props) => {
             variant="outline"
             onClick={() => {
               sessionStorage.setItem(`${storagePrefix}-hide-popup`, "true");
-              // TODO: collect analytics data
               sessionStorage.setItem(`${storagePrefix}-instant-close`, "true");
+              saveInstantClose();
               setShowMessageBadge(false);
             }}
           >
