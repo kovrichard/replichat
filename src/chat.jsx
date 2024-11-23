@@ -50,7 +50,7 @@ const Chat = (props) => {
   async function saveInstantOpen() {
     const chatId = localStorage.getItem(`${storagePrefix}-chat-id`);
 
-    const response = await fetch(
+    await fetch(
       `${import.meta.env.VITE_BACKEND_URL}/api/chat/${chatId}`,
       {
         method: "POST",
@@ -68,7 +68,7 @@ const Chat = (props) => {
   async function saveInstantClose() {
     const chatId = localStorage.getItem(`${storagePrefix}-chat-id`);
 
-    const response = await fetch(
+    await fetch(
       `${import.meta.env.VITE_BACKEND_URL}/api/chat/${chatId}`,
       {
         method: "POST",
@@ -85,7 +85,7 @@ const Chat = (props) => {
   async function incrementOpenCount() {
     const chatId = localStorage.getItem(`${storagePrefix}-chat-id`);
 
-    const response = await fetch(
+    await fetch(
       `${import.meta.env.VITE_BACKEND_URL}/api/chat/${chatId}`,
       {
         method: "PUT",
