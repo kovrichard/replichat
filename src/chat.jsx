@@ -60,6 +60,7 @@ const Chat = (props) => {
         body: JSON.stringify({
           instantOpen: true,
           openCount: 1,
+          apiKey: config.apiKey,
         }),
       }
     );
@@ -77,6 +78,7 @@ const Chat = (props) => {
         },
         body: JSON.stringify({
           instantClose: true,
+          apiKey: config.apiKey,
         }),
       }
     );
@@ -94,6 +96,7 @@ const Chat = (props) => {
         },
         body: JSON.stringify({
           open: true,
+          apiKey: config.apiKey,
         }),
       }
     );
