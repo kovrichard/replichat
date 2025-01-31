@@ -317,7 +317,6 @@ const ChatWindow = (props) => {
             </div>
           ) : (
             parsedMessages
-              .filter((message) => !message.toolInvocations)
               .map((message) =>
                 message.role === "user" ? (
                   <UserMessage
@@ -331,12 +330,12 @@ const ChatWindow = (props) => {
                 )
               )
           )}
-          {latestMessage && latestMessage.role === "assistant" ? (
+          {latestMessage && latestMessage.role === "assistant" && latestMessage.content !== "" ? (
             <AssistantMessage message={latestMessage} config={config} />
-          ) : null}
-          {isLoading && latestMessage === null ? (
+          ) : (
+            isLoading &&
             <AssistantMessage message={{ content: "..." }} config={config} pulse />
-          ) : null}
+          )}
         </CardContent>
       </ScrollArea>
       <CardFooter

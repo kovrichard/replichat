@@ -24,7 +24,7 @@
     "@radix-ui/react-slot": "1.1.0",
     "@radix-ui/react-tooltip": "1.1.2",
     "@tabler/icons-react": "3.8.0",
-    "ai": "3.3.28",
+    "ai": "4.1.16",
     "autoprefixer": "10.4.19",
     "class-variance-authority": "0.7.0",
     "clsx": "2.1.1",
