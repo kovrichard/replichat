@@ -113,6 +113,7 @@ const ChatWindow = (props) => {
   const footerRef = useRef(null);
   const [parsedMessages, setParsedMessages] = useState([]);
   const [latestMessage, setLatestMessage] = useState(null);
+  const [showPulse, setShowPulse] = useState(false);
 
   const {
     messages,
@@ -176,6 +177,14 @@ const ChatWindow = (props) => {
     ]);
   }
 
+  useEffect(() => {
+    if (isLoading) {
+      const timer = setTimeout(() => setShowPulse(true), 500);
+      return () => clearTimeout(timer);
+    } else {
+      setShowPulse(false);
+    }
+  }, [isLoading]);
 
   useEffect(() => {
     if (!messages || messages.length === 0) return;
@@ -212,7 +221,7 @@ const ChatWindow = (props) => {
     if (chatContainerRef.current && isLoading) {
       scrollToBottom(chatContainerRef);
     }
-  }, [isLoading, messages, parsedMessages, latestMessage]);
+  }, [isLoading, showPulse, messages, parsedMessages, latestMessage]);
 
   useEffect(() => {
     // Scroll to bottom when chat is opened
@@ -333,7 +342,7 @@ const ChatWindow = (props) => {
           {latestMessage && latestMessage.role === "assistant" && latestMessage.content !== "" ? (
             <AssistantMessage message={latestMessage} config={config} />
           ) : (
-            isLoading &&
+            showPulse &&
             <AssistantMessage message={{ content: "..." }} config={config} pulse />
           )}
         </CardContent>
