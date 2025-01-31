@@ -23,6 +23,23 @@ import { evaluate } from "@mdx-js/mdx";
 import { MDXProvider } from "@mdx-js/react";
 import * as runtime from "react/jsx-runtime";
 
+async function mdxToHtml(mdxString) {
+  const { default: Content } = await evaluate(mdxString, {
+    MDXProvider: MDXProvider,
+    ...runtime,
+  });
+
+  return <Content />;
+}
+
+function scrollToBottom(ref) {
+  ref.current.scrollIntoView({
+    behavior: "smooth",
+    block: "end",
+    inline: "nearest",
+  });
+}
+
 const UserMessage = ({ message, config, lighterPrimaryColor }) => (
   <div className="flex gap-3 justify-end">
     <div
@@ -148,15 +165,6 @@ const ChatWindow = (props) => {
     }
   };
 
-  async function mdxToHtml(mdxString) {
-    const { default: Content } = await evaluate(mdxString, {
-      MDXProvider: MDXProvider,
-      ...runtime,
-    });
-
-    return <Content />;
-  }
-
   async function parseAndAddMessage(message) {
     const parsedMessage = await mdxToHtml(message.content);
     setParsedMessages((prev) => [
@@ -168,13 +176,6 @@ const ChatWindow = (props) => {
     ]);
   }
 
-  function scrollToBottom(ref) {
-    ref.current.scrollIntoView({
-      behavior: "smooth",
-      block: "end",
-      inline: "nearest",
-    });
-  }
 
   useEffect(() => {
     if (!messages || messages.length === 0) return;
@@ -223,32 +224,28 @@ const ChatWindow = (props) => {
   useEffect(() => {
     const noSavedMessages = localStorage.getItem(`${storagePrefix}-messages`) === null;
 
+    // Save initial messages to local storage
     if (initialMessageExists && noSavedMessages) {
-      localStorage.setItem(
-        `${storagePrefix}-messages`,
-        JSON.stringify(config.initialMessages)
-      );
+      appendToLocalStorage(config.initialMessages[0]);
     }
   }, [config.initialMessages]);
 
   useEffect(() => {
     // Create chat-id if not exists
     if (localStorage.getItem(`${storagePrefix}-chat-id`) === null) {
-      const id = createId();
-      localStorage.setItem(`${storagePrefix}-chat-id`, id);
+      localStorage.setItem(`${storagePrefix}-chat-id`, createId());
     }
 
     // Append user message to local storage
     const lastMessage = messages[messages.length - 1];
     if (lastMessage && lastMessage.role === "user") {
       appendToLocalStorage(lastMessage);
+      return;
     }
 
     // Load messages from local storage
-    const savedMessages = localStorage.getItem(`${storagePrefix}-messages`);
-    const parsedMessages = savedMessages
-      ? JSON.parse(savedMessages)
-      : config.initialMessages;
+    const savedMessages = JSON.parse(localStorage.getItem(`${storagePrefix}-messages`) || "[]");
+    const parsedMessages = savedMessages.length > 0 ? savedMessages : config.initialMessages;
     if (messages.length === 0 && parsedMessages.length > 0) {
       setMessages(parsedMessages);
     }
