@@ -5,6 +5,52 @@ import { Badge } from "./components/ui/badge";
 import { createId } from "@paralleldrive/cuid2";
 
 const LazyChatWindow = lazy(() => import("./chat-window"));
+  
+const storagePrefix = "askthing-DTUlLMYs4kab8AUFSGeF5ln3";
+
+function lightenColor(color, percent) {
+  const num = parseInt(color.replace("#", ""), 16),
+    amt = Math.round(2.55 * percent),
+    R = (num >> 16) + amt,
+    B = ((num >> 8) & 0x00ff) + amt,
+    G = (num & 0x0000ff) + amt;
+
+  const newColor = (
+    0x1000000 +
+    (R < 255 ? (R < 1 ? 0 : R) : 255) * 0x10000 +
+    (B < 255 ? (B < 1 ? 0 : B) : 255) * 0x100 +
+    (G < 255 ? (G < 1 ? 0 : G) : 255)
+  )
+    .toString(16)
+    .slice(1);
+
+  return `#${newColor}`;
+}
+
+function showPopup() {
+  return sessionStorage.getItem(`${storagePrefix}-hide-popup`) === null;
+}
+
+async function sendToBackend(method, payload) {
+  const chatId = localStorage.getItem(`${storagePrefix}-chat-id`);
+
+  const response = await fetch(
+    `${import.meta.env.VITE_BACKEND_URL}/api/chat/${chatId}`,
+    {
+      method: method,
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(payload),
+    }
+  );
+
+  if (!response.ok) {
+    console.error("Failed to send message to backend");
+  }
+
+  return response.json();
+}
 
 const Chat = (props) => {
   const config = {
@@ -26,80 +72,27 @@ const Chat = (props) => {
   const lighterPrimaryColor = lightenColor(config.primaryColor, 20);
   const initialMessageExists =
     config.initialMessages.length > 0 && config.initialMessages[0].content !== "";
-  const storagePrefix = "askthing-DTUlLMYs4kab8AUFSGeF5ln3";
-
-  function lightenColor(color, percent) {
-    const num = parseInt(color.replace("#", ""), 16),
-      amt = Math.round(2.55 * percent),
-      R = (num >> 16) + amt,
-      B = ((num >> 8) & 0x00ff) + amt,
-      G = (num & 0x0000ff) + amt;
-
-    const newColor = (
-      0x1000000 +
-      (R < 255 ? (R < 1 ? 0 : R) : 255) * 0x10000 +
-      (B < 255 ? (B < 1 ? 0 : B) : 255) * 0x100 +
-      (G < 255 ? (G < 1 ? 0 : G) : 255)
-    )
-      .toString(16)
-      .slice(1);
-
-    return `#${newColor}`;
-  }
 
   async function saveInstantOpen() {
-    const chatId = localStorage.getItem(`${storagePrefix}-chat-id`);
-
-    await fetch(
-      `${import.meta.env.VITE_BACKEND_URL}/api/chat/${chatId}`,
-      {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          instantOpen: true,
-          openCount: 1,
-          apiKey: config.apiKey,
-        }),
-      }
-    );
+    await sendToBackend("POST", {
+      instantOpen: true,
+      openCount: 1,
+      apiKey: config.apiKey,
+    });
   }
 
   async function saveInstantClose() {
-    const chatId = localStorage.getItem(`${storagePrefix}-chat-id`);
-
-    await fetch(
-      `${import.meta.env.VITE_BACKEND_URL}/api/chat/${chatId}`,
-      {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          instantClose: true,
-          apiKey: config.apiKey,
-        }),
-      }
-    );
+    await sendToBackend("POST", {
+      instantClose: true,
+      apiKey: config.apiKey,
+    });
   }
 
   async function incrementOpenCount() {
-    const chatId = localStorage.getItem(`${storagePrefix}-chat-id`);
-
-    await fetch(
-      `${import.meta.env.VITE_BACKEND_URL}/api/chat/${chatId}`,
-      {
-        method: "PUT",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          open: true,
-          apiKey: config.apiKey,
-        }),
-      }
-    );
+    await sendToBackend("PUT", {
+      open: true,
+      apiKey: config.apiKey,
+    });
   }
 
   function toggleOpen() {
@@ -125,27 +118,17 @@ const Chat = (props) => {
   useEffect(() => {
     // Create chat-id if not exists
     if (localStorage.getItem(`${storagePrefix}-chat-id`) === null) {
-      const id = createId();
-      localStorage.setItem(`${storagePrefix}-chat-id`, id);
+      localStorage.setItem(`${storagePrefix}-chat-id`, createId());
     }
 
-    function showPopup() {
-      return sessionStorage.getItem(`${storagePrefix}-hide-popup`) === null;
-    }
-
-    const savedMessages = localStorage.getItem(`${storagePrefix}-messages`);
-    const parsedMessages = savedMessages
-      ? JSON.parse(savedMessages)
-      : config.initialMessages;
+    // Load messages from storage or fallback to initial messages
+    const savedMessages = JSON.parse(localStorage.getItem(`${storagePrefix}-messages`) || "[]");
+    const parsedMessages = savedMessages.length > 0 ? savedMessages : config.initialMessages;
 
     const onlyInitialMessage = parsedMessages.length === 1 && initialMessageExists;
 
     if (!open && onlyInitialMessage && showPopup()) {
-      setTimeout(() => {
-        if (showPopup()) {
-          setShowMessageBadge(true);
-        }
-      }, 3000);
+      setTimeout(() => showPopup() && setShowMessageBadge(true), 3000);
     } else {
       setShowMessageBadge(false);
     }
