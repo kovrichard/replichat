@@ -191,6 +191,10 @@ const ChatWindow = (props) => {
     // Iterate through all messages
     const handleMessages = async () => {
       messages.forEach(async (message, index) => {
+        const alreadyParsed = parsedMessages.find((m) => m.id === message.id);
+
+        if (alreadyParsed) return;
+
         const isLastMessage = index === messages.length - 1;
 
         if (isLastMessage) {
@@ -205,10 +209,7 @@ const ChatWindow = (props) => {
           }
         } else {
           // Handle previous messages
-          const alreadyParsed = parsedMessages.find((m) => m.id === message.id);
-          if (!alreadyParsed) {
-            await parseAndAddMessage(message);
-          }
+          await parseAndAddMessage(message);
         }
       });
     };
