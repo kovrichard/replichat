@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from "react";
+import { memo, useCallback, useEffect, useRef, useState } from "react";
 import { useChat } from "ai/react";
 import { Card, CardHeader, CardContent, CardFooter } from "@/components/ui/card";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
@@ -40,7 +40,7 @@ function scrollToBottom(ref) {
   });
 }
 
-const UserMessage = ({ message, config, lighterPrimaryColor }) => (
+const UserMessage = memo(({ message, config, lighterPrimaryColor }) => (
   <div className="flex gap-3 justify-end">
     <div
       className="rounded-xl bg-muted p-3 text-sm break-words max-w-[70%] rounded-tr-sm"
@@ -63,7 +63,7 @@ const UserMessage = ({ message, config, lighterPrimaryColor }) => (
       </AvatarFallback>
     </Avatar>
   </div>
-);
+));
 
 const AssistantAvatar = ({ size, config }) => (
   <Avatar
@@ -84,7 +84,7 @@ const AssistantAvatar = ({ size, config }) => (
   </Avatar>
 );
 
-const AssistantMessage = ({ message, pulse, config }) => (
+const AssistantMessage = memo(({ message, pulse, config }) => (
   <div className="flex items-start gap-3">
     <AssistantAvatar size={2} config={config} />
     <span
@@ -101,7 +101,7 @@ const AssistantMessage = ({ message, pulse, config }) => (
       {message.component || message.content}
     </span>
   </div>
-);
+));
 
 const ChatWindow = (props) => {
   const config = props.config;
@@ -132,7 +132,7 @@ const ChatWindow = (props) => {
     },
   });
 
-  function appendToLocalStorage(message) {
+  const appendToLocalStorage = useCallback((message) => {
     const savedMessages = JSON.parse(
       localStorage.getItem(`${storagePrefix}-messages`) ?? "[]"
     );
@@ -145,9 +145,9 @@ const ChatWindow = (props) => {
       `${storagePrefix}-messages`,
       JSON.stringify([...savedMessages, message])
     );
-  }
+  }, [storagePrefix]);
 
-  function customSubmit(e) {
+  const customSubmit = useCallback((e) => {
     if (error !== undefined) {
       setMessages(messages.slice(0, -1));
     }
@@ -158,15 +158,15 @@ const ChatWindow = (props) => {
         conversationId: localStorage.getItem(`${storagePrefix}-chat-id`),
       },
     });
-  }
+  }, [error, messages, handleSubmit, config.apiKey, storagePrefix]);
 
-  const onKeyDown = (e) => {
+  const onKeyDown = useCallback((e) => {
     if (e.key === "Enter" && !e.shiftKey) {
       customSubmit(e);
     }
-  };
+  }, [customSubmit]);
 
-  async function parseAndAddMessage(message) {
+  const parseAndAddMessage = useCallback(async (message) => {
     const parsedMessage = await mdxToHtml(message.content);
     setParsedMessages((prev) => [
       ...prev,
@@ -175,7 +175,7 @@ const ChatWindow = (props) => {
         component: parsedMessage,
       },
     ]);
-  }
+  }, []);
 
   useEffect(() => {
     if (isLoading) {
