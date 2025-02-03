@@ -1,26 +1,26 @@
-import { memo, useCallback, useEffect, useRef, useState } from "react";
-import { useChat } from "ai/react";
-import { Card, CardHeader, CardContent, CardFooter } from "@/components/ui/card";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
-import { cn } from "@/lib/utils";
-import {
-  IconMessage2Plus,
-  IconX,
-  IconSend,
-  IconPlayerStopFilled,
-} from "@tabler/icons-react";
+import { Card, CardContent, CardFooter, CardHeader } from "@/components/ui/card";
 import { ScrollArea } from "@/components/ui/scroll-area";
+import { Textarea } from "@/components/ui/textarea";
 import {
   Tooltip,
   TooltipContent,
   TooltipProvider,
   TooltipTrigger,
 } from "@/components/ui/tooltip";
-import { Textarea } from "@/components/ui/textarea";
-import { createId } from "@paralleldrive/cuid2";
+import { cn } from "@/lib/utils";
 import { evaluate } from "@mdx-js/mdx";
 import { MDXProvider } from "@mdx-js/react";
+import { createId } from "@paralleldrive/cuid2";
+import {
+  IconMessage2Plus,
+  IconPlayerStopFilled,
+  IconSend,
+  IconX,
+} from "@tabler/icons-react";
+import { useChat } from "ai/react";
+import { memo, useCallback, useEffect, useRef, useState } from "react";
 import * as runtime from "react/jsx-runtime";
 import PoweredByBadge from "./powered-by-badge";
 
@@ -133,39 +133,48 @@ const ChatWindow = (props) => {
     },
   });
 
-  const appendToLocalStorage = useCallback((message) => {
-    const savedMessages = JSON.parse(
-      localStorage.getItem(`${storagePrefix}-messages`) ?? "[]"
-    );
+  const appendToLocalStorage = useCallback(
+    (message) => {
+      const savedMessages = JSON.parse(
+        localStorage.getItem(`${storagePrefix}-messages`) ?? "[]"
+      );
 
-    if (message.id === savedMessages[savedMessages.length - 1]?.id) {
-      return;
-    }
+      if (message.id === savedMessages[savedMessages.length - 1]?.id) {
+        return;
+      }
 
-    localStorage.setItem(
-      `${storagePrefix}-messages`,
-      JSON.stringify([...savedMessages, message])
-    );
-  }, [storagePrefix]);
+      localStorage.setItem(
+        `${storagePrefix}-messages`,
+        JSON.stringify([...savedMessages, message])
+      );
+    },
+    [storagePrefix]
+  );
 
-  const customSubmit = useCallback((e) => {
-    if (error !== undefined) {
-      setMessages(messages.slice(0, -1));
-    }
+  const customSubmit = useCallback(
+    (e) => {
+      if (error !== undefined) {
+        setMessages(messages.slice(0, -1));
+      }
 
-    handleSubmit(e, {
-      body: {
-        apiKey: config.apiKey,
-        conversationId: localStorage.getItem(`${storagePrefix}-chat-id`),
-      },
-    });
-  }, [error, messages, handleSubmit, config.apiKey, storagePrefix]);
+      handleSubmit(e, {
+        body: {
+          apiKey: config.apiKey,
+          conversationId: localStorage.getItem(`${storagePrefix}-chat-id`),
+        },
+      });
+    },
+    [error, messages, handleSubmit, config.apiKey, storagePrefix]
+  );
 
-  const onKeyDown = useCallback((e) => {
-    if (e.key === "Enter" && !e.shiftKey) {
-      customSubmit(e);
-    }
-  }, [customSubmit]);
+  const onKeyDown = useCallback(
+    (e) => {
+      if (e.key === "Enter" && !e.shiftKey) {
+        customSubmit(e);
+      }
+    },
+    [customSubmit]
+  );
 
   const parseAndAddMessage = useCallback(async (message) => {
     const parsedMessage = await mdxToHtml(message.content);
@@ -255,8 +264,11 @@ const ChatWindow = (props) => {
     }
 
     // Load messages from local storage
-    const savedMessages = JSON.parse(localStorage.getItem(`${storagePrefix}-messages`) || "[]");
-    const parsedMessages = savedMessages.length > 0 ? savedMessages : config.initialMessages;
+    const savedMessages = JSON.parse(
+      localStorage.getItem(`${storagePrefix}-messages`) || "[]"
+    );
+    const parsedMessages =
+      savedMessages.length > 0 ? savedMessages : config.initialMessages;
     if (messages.length === 0 && parsedMessages.length > 0) {
       setMessages(parsedMessages);
     }
@@ -327,25 +339,27 @@ const ChatWindow = (props) => {
               <p>{error.message}</p>
             </div>
           ) : (
-            parsedMessages
-              .map((message) =>
-                message.role === "user" ? (
-                  <UserMessage
-                    key={message.id}
-                    message={message}
-                    config={config}
-                    lighterPrimaryColor={lighterPrimaryColor}
-                  />
-                ) : (
-                  <AssistantMessage key={message.id} message={message} config={config} />
-                )
+            parsedMessages.map((message) =>
+              message.role === "user" ? (
+                <UserMessage
+                  key={message.id}
+                  message={message}
+                  config={config}
+                  lighterPrimaryColor={lighterPrimaryColor}
+                />
+              ) : (
+                <AssistantMessage key={message.id} message={message} config={config} />
               )
+            )
           )}
-          {latestMessage && latestMessage.role === "assistant" && latestMessage.content !== "" ? (
+          {latestMessage &&
+          latestMessage.role === "assistant" &&
+          latestMessage.content !== "" ? (
             <AssistantMessage message={latestMessage} config={config} />
           ) : (
-            showPulse &&
-            <AssistantMessage message={{ content: "..." }} config={config} pulse />
+            showPulse && (
+              <AssistantMessage message={{ content: "..." }} config={config} pulse />
+            )
           )}
         </CardContent>
       </ScrollArea>
@@ -385,7 +399,7 @@ const ChatWindow = (props) => {
             <span className="sr-only">{isLoading ? "Stop" : "Send"}</span>
           </Button>
         </form>
-              <PoweredByBadge />
+        <PoweredByBadge />
       </CardFooter>
     </Card>
   );

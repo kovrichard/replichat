@@ -1,11 +1,11 @@
-import { lazy, useEffect, useState, Suspense } from "react";
 import { Button } from "@/components/ui/button";
-import { IconX, IconMessageDots } from "@tabler/icons-react";
-import { Badge } from "./components/ui/badge";
 import { createId } from "@paralleldrive/cuid2";
+import { IconMessageDots, IconX } from "@tabler/icons-react";
+import { Suspense, lazy, useEffect, useState } from "react";
+import { Badge } from "./components/ui/badge";
 
 const LazyChatWindow = lazy(() => import("./chat-window"));
-  
+
 const storagePrefix = "askthing-DTUlLMYs4kab8AUFSGeF5ln3";
 
 function lightenColor(color, percent) {
@@ -34,16 +34,13 @@ function showPopup() {
 async function sendToBackend(method, payload) {
   const chatId = localStorage.getItem(`${storagePrefix}-chat-id`);
 
-  const response = await fetch(
-    `${import.meta.env.VITE_BACKEND_URL}/api/chat/${chatId}`,
-    {
-      method: method,
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify(payload),
-    }
-  );
+  const response = await fetch(`${import.meta.env.VITE_BACKEND_URL}/api/chat/${chatId}`, {
+    method: method,
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify(payload),
+  });
 
   if (!response.ok) {
     console.error("Failed to send message to backend");
@@ -122,8 +119,11 @@ const Chat = (props) => {
     }
 
     // Load messages from storage or fallback to initial messages
-    const savedMessages = JSON.parse(localStorage.getItem(`${storagePrefix}-messages`) || "[]");
-    const parsedMessages = savedMessages.length > 0 ? savedMessages : config.initialMessages;
+    const savedMessages = JSON.parse(
+      localStorage.getItem(`${storagePrefix}-messages`) || "[]"
+    );
+    const parsedMessages =
+      savedMessages.length > 0 ? savedMessages : config.initialMessages;
 
     const onlyInitialMessage = parsedMessages.length === 1 && initialMessageExists;
 
