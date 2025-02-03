@@ -22,6 +22,7 @@ import { createId } from "@paralleldrive/cuid2";
 import { evaluate } from "@mdx-js/mdx";
 import { MDXProvider } from "@mdx-js/react";
 import * as runtime from "react/jsx-runtime";
+import PoweredByBadge from "./powered-by-badge";
 
 async function mdxToHtml(mdxString) {
   const { default: Content } = await evaluate(mdxString, {
@@ -384,23 +385,7 @@ const ChatWindow = (props) => {
             <span className="sr-only">{isLoading ? "Stop" : "Send"}</span>
           </Button>
         </form>
-        <div className="flex items-center gap-2 text-sm text-black">
-          <p>Powered by</p>
-          <a
-            href="https://askth.ing"
-            target="_blank"
-            rel="noreferrer"
-            className="flex items-center gap-2 hover:underline"
-          >
-            <img
-              src="https://cdn.askth.ing/icon.png"
-              alt="AskThing"
-              width={20}
-              height={20}
-            />
-            <p>AskThing</p>
-          </a>
-        </div>
+              <PoweredByBadge />
       </CardFooter>
     </Card>
   );
