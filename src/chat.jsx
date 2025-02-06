@@ -184,6 +184,7 @@ const Chat = (props) => {
         variant="outline"
         onClick={toggleOpen}
       >
+        <p className="sr-only">{open ? "Close chat" : "Open chat"}</p>
         {open ? <IconX size="50" /> : <IconMessageDots size="50" className="rotate-6" />}
         {showMessageBadge && initialMessageExists && (
           <Badge className="absolute inline-flex items-center justify-center top-0 right-0 -mt-2 -mr-2 size-6 bg-[#D54B10] text-white hover:bg-[#D54B10]">
