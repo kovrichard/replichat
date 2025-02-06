@@ -1,3 +1,7 @@
+import Message2Plus from "@/components/icons/message-2-plus";
+import PlayerStopFilled from "@/components/icons/player-stop-filled";
+import Send from "@/components/icons/send";
+import X from "@/components/icons/x";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardFooter, CardHeader } from "@/components/ui/card";
@@ -13,12 +17,6 @@ import { cn } from "@/lib/utils";
 import { evaluate } from "@mdx-js/mdx";
 import { MDXProvider } from "@mdx-js/react";
 import { createId } from "@paralleldrive/cuid2";
-import {
-  IconMessage2Plus,
-  IconPlayerStopFilled,
-  IconSend,
-  IconX,
-} from "@tabler/icons-react";
 import { useChat } from "ai/react";
 import { memo, useCallback, useEffect, useRef, useState } from "react";
 import * as runtime from "react/jsx-runtime";
@@ -303,7 +301,7 @@ const ChatWindow = (props) => {
                       setParsedMessages([]);
                     }}
                   >
-                    <IconMessage2Plus size={18} />
+                    <Message2Plus size={18} />
                   </Button>
                 </TooltipTrigger>
                 <TooltipContent>New conversation</TooltipContent>
@@ -314,7 +312,7 @@ const ChatWindow = (props) => {
               variant="ghost"
               onClick={() => setOpen(false)}
             >
-              <IconX size={18} />
+              <X size={18} />
             </Button>
           </div>
           <div className="flex gap-2 items-center">
@@ -391,11 +389,7 @@ const ChatWindow = (props) => {
               color: config.primaryColorForeground,
             }}
           >
-            {isLoading ? (
-              <IconPlayerStopFilled className="h-4 w-4" />
-            ) : (
-              <IconSend className="h-4 w-4" />
-            )}
+            {isLoading ? <PlayerStopFilled size={18} /> : <Send size={18} />}
             <span className="sr-only">{isLoading ? "Stop" : "Send"}</span>
           </Button>
         </form>
