@@ -17,14 +17,14 @@ async function getConfig() {
     })();
 
   if (!chatbotScript) {
-    console.error("AskThing script not found");
+    console.error("Remiq script not found");
     return;
   }
 
-  const apiKey = chatbotScript.getAttribute("data-askthing-api-key");
+  const apiKey = chatbotScript.getAttribute("data-remiq-api-key");
 
   if (!apiKey) {
-    console.error("AskThing API key not found");
+    console.error("Remiq API key not found");
     return;
   }
 
@@ -33,7 +33,7 @@ async function getConfig() {
   );
 
   if (!response.ok) {
-    console.error("Failed to fetch AskThing configuration");
+    console.error("Failed to fetch Remiq configuration");
     return;
   }
 
@@ -59,7 +59,7 @@ async function createShadowRoot(config) {
   shadowRoot.appendChild(style);
 
   const chatbotContainer = document.createElement("div");
-  chatbotContainer.id = "askthing-root";
+  chatbotContainer.id = "remiq-root";
   shadowRoot.appendChild(chatbotContainer);
 
   const root = createRoot(chatbotContainer);

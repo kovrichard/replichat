@@ -7,7 +7,7 @@ import { Badge } from "./components/ui/badge";
 
 const LazyChatWindow = lazy(() => import("./chat-window"));
 
-const storagePrefix = "askthing-DTUlLMYs4kab8AUFSGeF5ln3";
+const storagePrefix = "remiq-DTUlLMYs4kab8AUFSGeF5ln3";
 
 function lightenColor(color, percent) {
   const num = parseInt(color.replace("#", ""), 16),
