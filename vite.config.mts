@@ -16,5 +16,6 @@ export default defineConfig({
         entryFileNames: 'chat.js',
       },
     },
+    target: 'es2020',
   },
 })

@@ -7,13 +7,13 @@ export default function PoweredByBadge() {
     <div className="flex items-center gap-2 text-sm text-black">
       <p>Powered by</p>
       <a
-        href={`https://remiq.ai/?${source}&${medium}&${campaign}`}
+        href={`${import.meta.env.VITE_BACKEND_URL}/?${source}&${medium}&${campaign}`}
         target="_blank"
         rel="noreferrer"
         className="flex items-center gap-2 hover:underline"
       >
         <img
-          src="https://cdn.askth.ing/icon.png"
+          src={`${import.meta.env.VITE_CDN_URL}/icon.png`}
           alt="Remiq logo - go to Remiq.ai"
           width={20}
           height={20}

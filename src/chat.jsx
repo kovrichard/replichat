@@ -60,8 +60,8 @@ const Chat = (props) => {
     primaryColorForeground: "#FFFFFF",
     botColor: "#e5e5e5",
     botColorForeground: "#000000",
-    // userIcon: "https://cdn.askth.ing/user.png",
-    // botIcon: "https://cdn.askth.ing/robot-face.png",
+    // userIcon: `${import.meta.env.VITE_CDN_URL}/user.png`,
+    // botIcon: `${import.meta.env.VITE_CDN_URL}/robot-face.png`,
     ...props.config,
   };
 
