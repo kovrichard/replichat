@@ -4,7 +4,7 @@
 
 @font-face {
   font-family: "Inter";
-  src: url("https://cdn.remiq.ai/Inter-Medium.woff") format("woff");
+  src: url("https://cdn.remiq.ai/chat-window/Inter-Medium.woff") format("woff");
   font-weight: 500;
   font-style: normal;
   font-display: swap;
@@ -12,7 +12,7 @@
 
 @font-face {
   font-family: "Inter";
-  src: url("https://cdn.remiq.ai/Inter-SemiBold.woff") format("woff");
+  src: url("https://cdn.remiq.ai/chat-window/Inter-SemiBold.woff") format("woff");
   font-weight: 600;
   font-style: normal;
   font-display: swap;

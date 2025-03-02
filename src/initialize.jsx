@@ -51,7 +51,7 @@ async function createShadowRoot(config) {
 
   const shadowRoot = host.attachShadow({ mode: "open" });
 
-  const response = await fetch(`${import.meta.env.VITE_CDN_URL}/style.css`);
+  const response = await fetch(`${import.meta.env.VITE_CDN_URL}/chat-window/style.css`);
   const body = await response.text();
 
   const style = document.createElement("style");
